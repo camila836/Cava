@@ -1,0 +1,43 @@
+/* Importar variables comunes si es necesario */
+@import url('InicioSesion.css');
+
+/* ── GRID ESPECIAL PARA REGISTRO ── */
+.g2 { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 0.9rem; 
+}
+
+/* ── PANEL DE REGISTRO ── */
+.wrap { max-width: 980px; }
+
+.side { flex: 0 0 270px; min-height: 580px; }
+
+.form-panel { padding: 2.4rem 2.5rem; }
+
+/* Ajustes de campos para registro */
+input[type=text], input[type=tel], input[type=date], select {
+  width: 100%; padding: 0.7rem 0.9rem; border: 1px solid rgba(92,58,33,0.18);
+  border-radius: 7px; background: rgba(255,255,255,0.6);
+}
+
+/* ── CONSENTIMIENTO ── */
+.consent {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  font-size: 0.76rem; color: var(--text-muted); margin: 0.5rem 0 1.2rem;
+}
+
+.aviso {
+  min-height: 22px;
+  margin: 0 0 0.9rem;
+  font-size: 0.82rem;
+}
+
+.aviso.correcto { color: #3f6b3a; }
+.aviso.error { color: #9b3b2b; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .side { display: none; }
+  .g2 { grid-template-columns: 1fr; }
+}

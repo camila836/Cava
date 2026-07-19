@@ -1,0 +1,63 @@
+EVIDENCIA FASE 3 - 01 PRECONDICIONES
+Fecha y hora: 2026-07-18T21:12:34-05:00
+Raiz verificada: C:\Users\Maria Camila R\Documents\Cava\Cava
+Alcance: cierre de Fase 3, incluidos Paso 4A y Paso 4B. Fase 4 no iniciada.
+
+1. Estructura del proyecto
+Comando: comprobacion PowerShell con Test-Path sobre build.xml, src, web, database, docs, prompts y nbproject.
+Codigo de salida: 0.
+Resultado: los siete marcadores existen al mismo nivel.
+
+2. Git
+Comando: git -C "C:\Users\Maria Camila R\Documents\Cava\Cava" rev-parse --show-toplevel
+Codigo de salida: 0.
+Resultado: C:/Users/Maria Camila R
+Interpretacion: repositorio padre accidental del perfil; no corresponde exactamente a Cava. Se omitieron status, diff, add y commit para no afectar contenido ajeno. No se ejecutara git init.
+
+3. Respaldo previo
+Ruta: C:\Users\Maria Camila R\CAVA_Backups\Fase3_Cierre_20260718-211056
+Archivos: 21.
+Tamano total: 20041756 bytes.
+Verificacion de lectura: 0 fallos.
+Contenido permitido: docs, prompts, nbproject/project.properties, build.xml, web/WEB-INF, lib, web/WEB-INF/lib y dist/Cava.war.
+Exclusiones: domain.xml, credenciales, archivos de alias, logs completos y datos personales.
+
+4. MariaDB
+Comandos: Get-Process mysqld; Get-NetTCPConnection -LocalPort 3306; mysql.exe por TCP con SELECT VERSION() y SELECT 1.
+Codigos de salida: 0.
+Resultado: una instancia esperada, PID 7748, C:\xampp8\mysql\bin\mysqld.exe, puerto 3306 en LISTEN, MariaDB 10.4.32, SELECT 1 correcto.
+Interpretacion: activo; no se modifico MariaDB.
+
+5. GlassFish y JDBC
+Comandos: asadmin list-domains; list-password-aliases; list-jdbc-connection-pools; list-jdbc-resources; list-applications; ping-connection-pool CavaPool.
+Codigos de salida: 0.
+Resultado: domain1 activo, PID 5792; alias cava.mysql.password presente por nombre; CavaPool presente; jdbc/CavaDS presente; Cava desplegada; ping exitoso.
+Se registro solo el nombre del alias; no se consulto ni guardo su valor interno.
+
+6. HTTP
+Comandos: Invoke-WebRequest -UseBasicParsing.
+Codigos de salida: 0.
+Resultados: /Cava/Index.jsp HTTP 200, 3570 bytes; /Cava/Admin.jsp HTTP 200, 4375 bytes.
+
+7. Configuracion de aplicacion
+Comandos: Test-Path; rg -F jdbc/CavaDS; inspeccion de entradas del WAR con jar tf.
+Codigos de salida: 0.
+Resultados:
+- web/WEB-INF/glassfish-resources.xml: ausente.
+- build/web/WEB-INF/glassfish-resources.xml: ausente.
+- dist/Cava.war/glassfish-resources.xml: 0 coincidencias.
+- ConexionPool.java conserva ctx.lookup("jdbc/CavaDS") en la linea 26.
+- El WAR inicial contiene WEB-INF/lib/mysql-connector-java-8.0.12.jar: 1 coincidencia.
+
+8. Compilacion inicial
+Comando: "C:\Program Files\NetBeans-20\netbeans\extide\ant\bin\ant.bat" -f build.xml compile
+Codigo de salida: 0.
+Resultado: BUILD SUCCESSFUL; 33 fuentes ya compiladas, sin errores ni advertencias mostradas.
+
+9. Logs sensibles
+Ruta revisada: GlassFish domain1/logs/server.log.
+Ultima modificacion al iniciar esta tarea: 2026-07-18T18:24:34-05:00.
+Inicio de esta verificacion: 2026-07-18T21:08:00-05:00.
+Resultado: no habia eventos nuevos en el intervalo de esta tarea. No se copio el log completo ni se expuso contenido sensible.
+
+Conclusion: todas las precondiciones tecnicas esenciales coinciden con el estado confirmado. La unica diferencia prevista es que el WAR inicial aun empaqueta una copia redundante del driver, objeto de los pasos siguientes. El checkpoint Git queda no aplicable por raiz accidental.

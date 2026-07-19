@@ -1,0 +1,40 @@
+EVIDENCIA FASE 3 - 06 REVISION SANITIZADA DE LOGS
+Fecha: 2026-07-18
+Intervalo exacto: 2026-07-18T21:21:28.957-05:00 a 2026-07-18T21:23:55.063-05:00
+Ruta revisada: C:\Users\Maria Camila R\Documents\glassfish\glassfish-7.0.25\glassfish\domains\domain1\logs\server.log
+Metodo: lectura por bloques con marca temporal; no se copio el log completo.
+
+Patrones buscados:
+- Cava, CavaPool, jdbc/CavaDS, JNDI y DataSource.
+- SQLException, SQLState, CommunicationsException y SocketException.
+- ClassNotFoundException, NoClassDefFoundError y MysqlDataSource.
+- Access denied for user y authentication failed.
+- deployment, ERROR, WARNING y SEVERE.
+
+Conteo del intervalo:
+- bloques de log: 74.
+- registros con nivel SEVERE: 27.
+- registros con nivel WARNING: 0.
+- errores SQL/SQLSTATE: 0.
+- errores de autenticacion: 0.
+- errores de driver o classloader: 0.
+- errores de conexion JDBC: 0.
+- errores asociados a CavaPool: 0.
+- errores asociados a jdbc/CavaDS: 0.
+- eventos de despliegue de Cava: 4.
+
+Clasificacion de los 27 registros SEVERE:
+1. Incidente logico durante la detencion de GlassFish: fallo de resolucion del host Camila.lan al intentar desregistrar JMX/RMI. El stack trace se emitio fragmentado en 26 registros SEVERE. No involucra MariaDB, CavaPool, jdbc/CavaDS, el driver ni la aplicacion Cava. El reinicio termino con codigo 0 y el nuevo proceso inicio correctamente.
+2. Un registro PWC6117 File "null" not found causado deliberadamente al solicitar la URL de la sonda despues de eliminarla, para demostrar HTTP 404. No es un error funcional persistente.
+
+Eventos relevantes confirmados:
+- Cava fue cargada despues del reinicio.
+- Cava fue redesplegada despues de limpiar la sonda.
+- CavaPool fue creado en memoria con validacion activa.
+- El ping y la consulta real posteriores al reinicio pasaron.
+
+Sanitizacion:
+- no se incluyeron contrasenas, hashes, tokens, cookies, encabezados de sesion ni valores internos de alias.
+- cava.mysql.password se conserva solo como nombre permitido del alias cuando es necesario.
+
+Conclusion: no aparecieron errores nuevos de driver, classloader, autenticacion, CavaPool, JNDI, DataSource, SQL o despliegue de Cava. Queda como deuda fuera del alcance revisar la resolucion local de Camila.lan para el cierre JMX/RMI; no impidio el reinicio ni afecta la cadena JDBC validada.

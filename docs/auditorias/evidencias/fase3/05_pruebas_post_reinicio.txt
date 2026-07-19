@@ -1,0 +1,48 @@
+EVIDENCIA FASE 3 - 05 PRUEBAS POSTERIORES AL REINICIO
+Fecha: 2026-07-18
+Intervalo: 2026-07-18T21:21:28.957-05:00 a 2026-07-18T21:23:55.063-05:00
+
+Estado anterior al reinicio:
+- GlassFish PID: 5792.
+- MariaDB PID: 7748.
+- Cava desplegada como aplicacion web.
+- Ping CavaPool: codigo 0, exitoso.
+- /Cava/Index.jsp: HTTP 200, 3570 bytes.
+- /Cava/Admin.jsp: HTTP 200, 4375 bytes.
+- Consulta anterior mediante Conexion.getConn(): CAVA_DB_OK productos=0.
+
+Reinicio:
+Comando: asadmin restart-domain domain1
+Codigo de salida: 0.
+Resultado: Successfully restarted the domain.
+
+Estado posterior al reinicio:
+- GlassFish PID nuevo: 3380.
+- domain1: running.
+- Cava: desplegada como aplicacion web.
+- Ping CavaPool: codigo 0, exitoso.
+- /Cava/Index.jsp: HTTP 200, 3570 bytes.
+- /Cava/Admin.jsp: HTTP 200, 4375 bytes.
+- MariaDB PID: 7748, sin reinicio ni modificacion.
+
+Consulta posterior al reinicio:
+- Inicio: 2026-07-18T21:22:51.718-05:00.
+- Fin: 2026-07-18T21:22:55.416-05:00.
+- Conexion: Conexion.getConn() y jdbc/CavaDS.
+- SQL: SELECT COUNT(*) FROM productos;
+- HTTP: 200.
+- Resultado: CAVA_DB_OK productos=0.
+
+Limpieza final:
+- Sonda temporal eliminada.
+- clean, compile y dist finales: codigos 0.
+- redespliegue final: codigo 0.
+- ping final: codigo 0.
+- driver en build: ausente.
+- driver en WAR: 0 coincidencias.
+- sonda en domain1: 0 archivos.
+- sonda en WAR: 0 coincidencias.
+- URL final de la sonda: HTTP 404.
+- Index.jsp y Admin.jsp finales: HTTP 200.
+
+Conclusion: despliegue, pool, HTTP y consulta persistieron despues del reinicio correcto de GlassFish. MariaDB no fue reiniciado ni modificado.

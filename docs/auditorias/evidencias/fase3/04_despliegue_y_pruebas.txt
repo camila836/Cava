@@ -1,0 +1,50 @@
+EVIDENCIA FASE 3 - 04 DESPLIEGUE Y PRUEBAS
+Fecha: 2026-07-18
+Intervalo principal: 2026-07-18T21:19:24.344-05:00 a 2026-07-18T21:20:00.142-05:00
+
+1. Despliegue
+Comando: asadmin deploy --force=true --name Cava --contextroot /Cava dist/Cava.war
+Codigo de salida: 0.
+Resultado: Application deployed with name Cava.
+Comando: asadmin list-applications
+Codigo de salida: 0.
+Resultado: Cava <web>.
+
+2. Pool
+Comando: asadmin ping-connection-pool CavaPool
+Codigo de salida: 0.
+Resultado: ping exitoso.
+Advertencia CLI031: la opcion target esta obsoleta y fue ignorada; no afecto el resultado.
+
+3. HTTP
+Comando: Invoke-WebRequest -UseBasicParsing.
+Codigos de salida: 0.
+- http://localhost:8080/Cava/Index.jsp: HTTP 200, 3570 bytes.
+- http://localhost:8080/Cava/Admin.jsp: HTTP 200, 4375 bytes.
+
+4. Consulta real
+Sonda temporal: __fase3_db_probe.jsp creada solo en la copia desplegada de Cava; no se agrego a src, web, build ni WAR.
+Cadena utilizada: Conexion.getConn() -> lookup jdbc/CavaDS -> CavaPool -> driver comun -> MariaDB.
+SQL: SELECT COUNT(*) FROM productos;
+Inicio: 2026-07-18T21:19:57.602-05:00.
+Fin: 2026-07-18T21:20:00.142-05:00.
+HTTP: 200.
+Resultado: CAVA_DB_OK productos=0.
+
+5. Limpieza de la sonda
+- Archivo temporal eliminado de la copia desplegada.
+- clean: codigo 0, BUILD SUCCESSFUL.
+- compile: codigo 0, BUILD SUCCESSFUL.
+- dist: codigo 0, BUILD SUCCESSFUL.
+- redespliegue del WAR limpio: codigo 0.
+- ping posterior: codigo 0.
+- coincidencias de sonda en fuente: 0.
+- coincidencias de sonda en WAR: 0.
+- coincidencias del driver en WAR: 0.
+- URL de la sonda despues del redespliegue: HTTP 404.
+
+6. Driver desplegado
+Cava/WEB-INF/lib/mysql-connector-java-8.0.12.jar: ausente despues del despliegue del WAR limpio.
+El driver comun de GlassFish permanecio sin modificaciones.
+
+Conclusion: despliegue, pool, HTTP y consulta real pasaron. No quedo endpoint de diagnostico permanente.

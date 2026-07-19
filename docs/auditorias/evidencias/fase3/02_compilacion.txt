@@ -1,0 +1,43 @@
+EVIDENCIA FASE 3 - 02 COMPILACION
+Fecha: 2026-07-18
+Raiz: C:\Users\Maria Camila R\Documents\Cava\Cava
+Herramienta: C:\Program Files\NetBeans-20\netbeans\extide\ant\bin\ant.bat
+
+Cambio previo validado:
+- nbproject/project.properties define build.web.excludes para excluir:
+  - WEB-INF/lib/mysql-connector-java-8.0.12.jar
+  - lib/mysql-connector-java-8.0.12.jar
+- Motivo: CavaPool es global y usa el driver comun de GlassFish. La ACL del entorno impidio eliminar fisicamente los dos JAR fuente redundantes, por lo que se conservaron y se impidio su empaquetado mediante una propiedad soportada por NetBeans.
+- No se modificaron build.xml, Java, GlassFish, CavaPool, jdbc/CavaDS, alias ni credenciales.
+
+1. Clean
+Comando: ant.bat -f build.xml clean
+Codigo de salida: 0.
+Resultado: BUILD SUCCESSFUL. build y dist se eliminaron y regeneraron por objetivos de Ant.
+
+2. Compile
+Comando: ant.bat -f build.xml compile
+Codigo de salida: 0.
+Resultado: BUILD SUCCESSFUL. Compiladas 33 fuentes. No se mostraron errores ni advertencias.
+
+3. Dist
+Comando: ant.bat -f build.xml dist
+Codigo de salida: 0.
+Resultado: BUILD SUCCESSFUL. Generado dist/Cava.war.
+
+4. Validacion del driver
+- build/web/WEB-INF/lib/mysql-connector-java-8.0.12.jar: ausente.
+- dist/Cava.war/WEB-INF/lib/mysql-connector-java-8.0.12.jar: ausente.
+- Driver comun de GlassFish conservado sin cambios:
+  C:\Users\Maria Camila R\Documents\glassfish\glassfish-7.0.25\glassfish\domains\domain1\lib\mysql-connector-java-8.0.12.jar
+  Tamano: 2020431 bytes.
+  SHA-256: 8EFE96BB34C38DB4C2AF61AECEF6B5D67E12B011845F61C383A26FBB5F6492F2
+
+5. Intentos de eliminacion controlada
+- apply_patch no pudo procesar los JAR por ser binarios no UTF-8; no produjo cambios.
+- Remove-Item fue rechazado con UnauthorizedAccessException.
+- La ACL mostro lectura heredada para Camila\CodexSandboxUsers y no permitio conceder Modify.
+- Una prueba de apertura con SetLength fue rechazada; el tamano permanecio en 2020431 bytes.
+- Las copias fuente permanecen intactas y respaldadas con el mismo SHA-256.
+
+Conclusion: la compilacion y el WAR no dependen de una copia local del Connector/J. El artefacto final usa la arquitectura global aprobada.

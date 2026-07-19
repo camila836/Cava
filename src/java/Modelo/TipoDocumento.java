@@ -1,0 +1,41 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Modelo;
+
+public class TipoDocumento {
+
+    private int    idTipoDocumento;
+    private String descripcion;
+
+    public TipoDocumento() {
+    
+    }
+
+    public int    getIdTipoDocumento()              {
+        return idTipoDocumento; 
+    
+    }
+    
+    public void   setIdTipoDocumento(int idTipoDocumento)      { 
+        this.idTipoDocumento = idTipoDocumento; 
+    
+    }
+
+    public String getDescripcion()                    { 
+        return descripcion; 
+    
+    }
+    
+    
+    public void   setDescripcion(String descripcion)   { 
+        this.descripcion = descripcion; 
+    
+    }
+
+    @Override
+    public String toString() {
+        return "TipoDocumento{id=" + idTipoDocumento + ", descripcion='" + descripcion + "'}";
+    }
+}

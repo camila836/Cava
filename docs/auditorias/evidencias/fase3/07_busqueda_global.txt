@@ -1,0 +1,150 @@
+EVIDENCIA FASE 3 - 07 BUSQUEDA GLOBAL REPRODUCIBLE
+Fecha: 2026-07-18
+Raiz: C:\Users\Maria Camila R\Documents\Cava\Cava
+
+Herramientas:
+- ripgrep 15.1.0 (rev af60c2de9d).
+- PowerShell para clasificacion y conteo sin imprimir valores sensibles.
+- git 2.50.0.windows.1; git grep no aplicable porque la raiz Git detectada es C:\Users\Maria Camila R y no el proyecto Cava.
+
+Rutas incluidas:
+- src/
+- web/
+- database/
+- docs/
+- prompts/
+- nbproject/
+- build.xml
+- .gitignore
+
+Globs literales ejecutados:
+--glob '!**/.git/**'
+--glob '!**/build/**'
+--glob '!**/dist/**'
+--glob '!**/backups/**'
+--iglob '!**/*.jar'
+--iglob '!**/*.war'
+--iglob '!**/*.class'
+--iglob '!**/*.exe'
+--iglob '!**/*.dll'
+--iglob '!**/*.zip'
+--iglob '!**/*.rar'
+--iglob '!**/*.7z'
+--iglob '!**/*.tar'
+--iglob '!**/*.gz'
+--iglob '!**/*.tgz'
+--iglob '!**/*.bz2'
+--iglob '!**/*.xz'
+--iglob '!**/*.png'
+--iglob '!**/*.jpg'
+--iglob '!**/*.jpeg'
+--iglob '!**/*.gif'
+--iglob '!**/*.webp'
+--iglob '!**/*.bmp'
+--iglob '!**/*.ico'
+--iglob '!**/*.svg'
+--iglob '!**/*.pdf'
+--iglob '!**/*.mp3'
+--iglob '!**/*.wav'
+--iglob '!**/*.ogg'
+--iglob '!**/*.m4a'
+--iglob '!**/*.flac'
+--iglob '!**/*.mp4'
+--iglob '!**/*.webm'
+--iglob '!**/*.mov'
+--iglob '!**/*.avi'
+
+No se utilizo la opcion inexistente --binary-skip. El inventario de extensiones no encontro otra extension binaria que exigiera ampliar la lista. Extensiones textuales revisadas: .css, .gitignore, .java, .jsp, .md, .mf, .properties, .sql, .txt y .xml.
+
+Primera ejecucion, antes de actualizar la documentacion:
+- archivos textuales revisados: 75.
+- archivos candidatos por reglas de secretos: 24.
+- candidatos estrictos de valor: 4.
+- secretos reales: 0.
+- dos candidatos documentales ya estaban sanitizados.
+- dos candidatos de nbproject/ant-deploy.xml son referencias de variable `${gfv3.password}` sin valor; clasificacion manual: identificador seguro.
+- URL JDBC con credenciales: 0.
+
+Conteos de reglas de secretos antes:
+- password: 88.
+- passwd: 0.
+- contrasena/contraseña: 50.
+- clave: 57.
+- secret: 7.
+- token: 20.
+- IDENTIFIED BY: 4.
+- jdbc:mysql: 0.
+- root: 40.
+- mysql_native_password: 4.
+- asignacion con apariencia de credencial: 14; todas referencias, placeholders o historia sanitizada.
+- credencial incluida en URL: 0.
+
+Linea base documental anterior, reconstruida desde el respaldo verificado para obtener conteos exactos:
+- FASE 3 EN PROGRESO: 4.
+- Fase 3 pendiente: 0.
+- conexion pendiente: 2.
+- conexion sin validar: 0.
+- cava_app AUSENTE: 9.
+- CavaPool AUSENTE: 11.
+- jdbc/CavaDS AUSENTE: 11.
+- Paso 4B NO INICIADO: 7.
+- Paso 4B DETENIDO: 2.
+- glassfish-resources.xml: 22.
+- root sin contrasena: 0.
+- DriverManager: 27.
+
+Clasificacion anterior:
+- las apariciones AUSENTE, NO INICIADO y DETENIDO de INFORME_FASE3 eran evidencia historica que debia conservarse;
+- las afirmaciones activas incorrectas estaban en el resumen de estado, roadmap, arquitectura, README y prompt de Fase 3;
+- las referencias a DriverManager eran prohibiciones o confirmaciones validas;
+- no se encontro secreto real.
+
+Segunda ejecucion, despues de actualizar documentacion:
+- archivos textuales verificados: 75.
+- archivos candidatos por reglas de secretos: 24.
+- candidatos estrictos de valor: 4.
+- candidatos que requieren accion: 0.
+- secretos reales: 0.
+- afirmaciones activas incorrectas: 0.
+- referencias historicas preservadas: 67.
+- referencias validas: 30.
+
+Conteos de reglas de secretos despues:
+- password: 90.
+- passwd: 0.
+- contrasena/contraseña: 51.
+- clave: 57.
+- secret: 7.
+- token: 20.
+- IDENTIFIED BY: 4.
+- jdbc:mysql: 0.
+- root: 42.
+- mysql_native_password: 4.
+- asignacion con apariencia de credencial: 14; ninguna contiene un valor real.
+- credencial incluida en URL: 0.
+
+Conteos documentales despues:
+- FASE 3 EN PROGRESO: 1, historica y rotulada.
+- Fase 3 pendiente: 0.
+- conexion pendiente: 1, historica.
+- conexion sin validar: 0.
+- cava_app AUSENTE: 9, historicas.
+- CavaPool AUSENTE: 11, historicas.
+- jdbc/CavaDS AUSENTE: 11, historicas.
+- Paso 4B NO INICIADO: 7, historicas.
+- Paso 4B DETENIDO: 2, historicas.
+- glassfish-resources.xml: 26, referencias historicas o explicaciones validas de su ausencia final.
+- root sin contrasena: 0.
+- DriverManager: 29, prohibiciones o confirmaciones validas.
+
+Codigos de salida:
+- rg --files: 0.
+- busquedas con coincidencias: 0.
+- reglas sin coincidencias: 1, comportamiento normal de rg y no error operativo.
+
+Comprobaciones separadas de build y dist:
+- build/web no contiene mysql-connector-java-8.0.12.jar.
+- dist/Cava.war fue inspeccionado como ZIP; no contiene driver, glassfish-resources.xml, sondas, temporales, logs ni nombres de credencial.
+- no quedan archivos de sonda en domain1.
+
+Conclusion: busqueda completa y reproducible. No hay secretos en texto plano, afirmaciones activas incorrectas, sondas o temporales. La historia de intentos fallidos se conserva rotulada. Fase 3 queda cerrada y Fase 4 no iniciada.

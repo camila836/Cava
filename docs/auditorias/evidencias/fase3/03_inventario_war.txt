@@ -1,0 +1,53 @@
+EVIDENCIA FASE 3 - 03 INVENTARIO DEL WAR
+Fecha: 2026-07-18
+WAR: C:\Users\Maria Camila R\Documents\Cava\Cava\dist\Cava.war
+Tamano: 6327952 bytes.
+SHA-256 final posterior a la limpieza de sondas: 48014EA9EF42106419A3A9735EC87083C3EFF317A2A0ED7EE355E50CEB088A2B
+Entradas: 60.
+Tamano total sin comprimir: 6319456 bytes.
+
+Metodo: inspeccion reproducible con System.IO.Compression.ZipFile y SHA-256; no se modifico manualmente el WAR.
+Codigo de salida: 0.
+
+Inventario relevante:
+- WEB-INF/glassfish-web.xml: 1.
+- WEB-INF/classes/Conexion/Conexion.class: 1.
+- WEB-INF/classes/Conexion/ConexionPool.class: 1.
+- JSP: 4.
+  - Admin.jsp
+  - Index.jsp
+  - InicioSesion.jsp
+  - RegistrarUsuario.jsp
+- glassfish-resources.xml: 0.
+- mysql-connector-java-8.0.12.jar: 0.
+- sondas o entradas de diagnostico: 0.
+- temporales: 0.
+- logs: 0.
+- nombres de archivo con apariencia de credencial: 0.
+
+Auditoria del driver:
+1. Driver oficial conservado:
+   C:\Users\Maria Camila R\Documents\glassfish\glassfish-7.0.25\glassfish\domains\domain1\lib\mysql-connector-java-8.0.12.jar
+   Rol: fuente para el classloader comun de GlassFish y CavaPool global.
+   Tamano: 2020431 bytes.
+   SHA-256: 8EFE96BB34C38DB4C2AF61AECEF6B5D67E12B011845F61C383A26FBB5F6492F2
+2. Cava/lib/mysql-connector-java-8.0.12.jar:
+   Rol observado: copia fuente no referenciada por Ant ni NetBeans.
+   Estado: redundante, conservada por ACL de solo lectura; excluida de build/WAR por no estar bajo el webroot.
+   Tamano y SHA-256: identicos al driver oficial.
+3. Cava/web/WEB-INF/lib/mysql-connector-java-8.0.12.jar:
+   Rol observado: copia fuente que el webroot incluia automaticamente en build/WAR.
+   Estado: redundante, conservada por ACL de solo lectura; excluida mediante build.web.excludes.
+   Tamano y SHA-256: identicos al driver oficial.
+4. build/web y dist/Cava.war:
+   Rol: salidas generadas, no fuentes independientes.
+   Estado final: no contienen el driver.
+5. Aplicacion desplegada anterior:
+   Contenia la copia del WAR anterior; sera reemplazada al desplegar el WAR final.
+
+Dependencias:
+- javac.classpath esta vacio.
+- No se encontraron imports com.mysql.* ni DriverManager en src/java.
+- La clase especifica com.mysql.cj.jdbc.MysqlDataSource existe en el driver comun.
+
+Conclusion: el WAR final esta limpio y depende correctamente del driver comun requerido por el pool global.
