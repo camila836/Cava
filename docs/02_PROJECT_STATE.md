@@ -184,6 +184,11 @@ histórica completada. La evidencia detallada y el cierre autoritativo se
 encuentran en `docs/auditorias/INFORME_FASE3.md` y
 `docs/auditorias/evidencias/fase3/`.
 
+La Fase 4A — Auditoría y planificación de consolidación de base de datos quedó
+**CERRADA** el 19 de julio de 2026. Su diagnóstico, matriz y plan sin DDL/DML
+están en `docs/auditorias/INFORME_FASE4A.md`; la Fase 4B permanece pendiente
+de autorización explícita.
+
 ---
 
 ## 7. Conexión: criterio de cierre
