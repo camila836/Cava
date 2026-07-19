@@ -1,3 +1,6 @@
+-- Estado: APLAZADA PARA FASE 12. No ejecutar durante Fase 4B.
+-- Dependencias funcionales pendientes: entrega, expiración y protección de token.
+
 USE cava;
 
 -- Tabla para verificación de cuenta por correo y/o SMS.

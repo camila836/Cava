@@ -1,3 +1,6 @@
+-- Estado: APLAZADA PARA FASE 12. No ejecutar durante Fase 4B.
+-- Dependencias funcionales pendientes: política de eliminación y capa Java.
+
 USE cava;
 
 -- Tabla de favoritos/wishlist: relación muchos-a-muchos entre usuarios y productos.

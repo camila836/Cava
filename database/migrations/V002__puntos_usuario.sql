@@ -1,3 +1,6 @@
+-- Estado: APLAZADA PARA FASE 12. No ejecutar durante Fase 4B.
+-- Dependencias funcionales pendientes: acumulación, redención y auditoría.
+
 USE cava;
 
 -- Tabla de puntos de fidelidad: guarda cada movimiento (ganancia o redención)

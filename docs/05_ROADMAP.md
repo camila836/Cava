@@ -163,7 +163,9 @@ Demostrar que la conexión JNDI y el pool funcionan sin configuraciones manuales
 
 # Fase 4 — Consolidación de base de datos
 
-**Estado: PENDIENTE DE AUTORIZACIÓN; no iniciada durante el cierre de Fase 3.**
+**Estado: CERRADA el 19 de julio de 2026.** Auditoría en
+`docs/auditorias/INFORME_FASE4A.md`; implementación y validación temporal en
+`docs/auditorias/INFORME_FASE4B.md`.
 
 ## Objetivo
 
@@ -184,11 +186,12 @@ Definir un esquema reproducible y coherente.
 
 ## Criterios de aceptación
 
-- [ ] La base se crea desde cero.
-- [ ] Las 15 entidades principales están claras.
-- [ ] Las migraciones tienen orden.
-- [ ] No hay scripts contradictorios.
-- [ ] Los tipos son compatibles.
+- [x] La base se crea desde cero.
+- [x] Las 15 entidades principales están claras.
+- [x] Las migraciones tienen orden y permanecen aplazadas.
+- [x] No hay scripts contradictorios.
+- [x] Los tipos SQL están consolidados; los ajustes de precisión Java quedan
+  formalmente asignados a la Fase 5.
 
 ---
 

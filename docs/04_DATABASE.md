@@ -3,8 +3,9 @@
 # Base de datos oficial de CAVA
 
 > **Motor:** MySQL  
-> **Estado:** Diseño y scripts pendientes de consolidación  
-> **Fuente de verdad:** esquema SQL aprobado y validado contra los Models y DAO
+> **Estado:** Esquema de primera versión consolidado y validado en Fase 4B
+> **Fuente de verdad:** instalador SQL `00`–`03`, validado estructuralmente;
+> la precisión de Models y DAO se corrige en Fases 5 y 6
 
 ---
 
@@ -65,7 +66,8 @@ Pedidos, pagos, envíos y movimientos de inventario deben conservar trazabilidad
 
 ## 3. Estado conocido
 
-El proyecto contiene un esquema principal y migraciones adicionales.
+El proyecto contiene un instalador principal separado en `00`–`03`, una
+instantánea de compatibilidad `cava.sql` y cuatro migraciones futuras ordenadas.
 
 También existen tablas o propuestas relacionadas con:
 
@@ -74,15 +76,17 @@ También existen tablas o propuestas relacionadas con:
 - reseñas;
 - verificación de cuenta.
 
-Sin embargo, no todas estas tablas tienen todavía Model y DAO.
+Estas cuatro funciones no tienen todavía Model y DAO y permanecen aplazadas
+para Fase 12.
 
-Antes de continuar se debe definir:
+La Fase 4 definió:
 
-1. qué tablas pertenecen a la primera versión;
-2. cuál es el script inicial oficial;
-3. cuáles archivos son migraciones;
-4. cuál es el orden obligatorio de ejecución;
-5. qué datos iniciales son necesarios.
+1. las 15 tablas actuales pertenecen a la primera versión;
+2. el instalador oficial usa `00_create_database.sql` a
+   `03_seed_catalogs.sql`;
+3. las migraciones V001–V004 son futuras y no se ejecutan en la instalación;
+4. el orden obligatorio está en `database/README.md`;
+5. no existen todavía valores de catálogo autorizados.
 
 ---
 
@@ -90,6 +94,8 @@ Antes de continuar se debe definir:
 
 ```text
 database/
+├── README.md
+├── cava.sql                    # compatibilidad; no ejecutar con 01
 ├── 00_create_database.sql
 ├── 01_schema.sql
 ├── 02_indexes.sql
@@ -98,8 +104,8 @@ database/
 │   ├── V001__favoritos.sql
 │   ├── V002__puntos_usuario.sql
 │   ├── V003__resenas.sql
-│   └── V004__verificacion_cuenta.sql
-└── backups/
+│   ├── V004__verificacion_cuenta.sql
+│   └── README.md
 ```
 
 Los backups reales no deben almacenarse en Git si contienen información personal o credenciales.
@@ -602,28 +608,29 @@ La matriz debe cubrir todas las entidades.
 
 La base se considera estable cuando:
 
-- [ ] Existe un script inicial oficial.
-- [ ] Las migraciones tienen orden.
-- [ ] Todas las tablas se crean desde cero.
-- [ ] No hay scripts contradictorios.
-- [ ] Las claves foráneas funcionan.
-- [ ] Los índices principales existen.
+- [x] Existe un instalador inicial oficial separado en `00`–`03`.
+- [x] Las migraciones tienen orden V001–V004 y están aplazadas.
+- [x] Todas las tablas se crean desde cero.
+- [x] No hay scripts contradictorios; `cava.sql` coincide con `01_schema.sql`.
+- [x] Las claves foráneas y sus reglas fueron validadas.
+- [x] Los índices principales existen.
 - [ ] Los tipos coinciden con Java.
 - [ ] Dinero usa `DECIMAL` y `BigDecimal`.
-- [ ] Los datos iniciales son reproducibles.
-- [ ] Los 15 DAO usan nombres reales.
-- [ ] Las pruebas fueron ejecutadas.
-- [ ] La documentación fue actualizada.
+- [x] Los datos iniciales son reproducibles: no existen valores autorizados y
+  el script reservado no ejecuta DML.
+- [x] Los 15 DAO usan nombres reales, confirmado en Fase 4A.
+- [x] Las pruebas de instalación temporal fueron ejecutadas.
+- [x] La documentación fue actualizada.
 
 ---
 
 ## 22. Pendientes actuales
 
-- Consolidar el esquema principal.
-- Definir tablas de la primera versión.
-- Renombrar archivos SQL con espacios o nombres ambiguos.
+- ~~Consolidar el esquema principal.~~ Cerrado en Fase 4B.
+- ~~Definir tablas de la primera versión.~~ Cerrado: 15 tablas.
+- ~~Ordenar migraciones.~~ Cerrado documentalmente; ejecución aplazada a Fase 12.
 - Revisar tipos monetarios.
 - Revisar claves foráneas.
 - Revisar eliminación física o lógica.
-- Crear matriz Model–tabla–columna.
-- Validar migraciones adicionales.
+- ~~Crear matriz Model–tabla–columna.~~ Cerrado en Fase 4A.
+- Validar funcionalmente migraciones adicionales en Fase 12.

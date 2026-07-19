@@ -1,3 +1,6 @@
+-- Estado: APLAZADA PARA FASE 12. No ejecutar durante Fase 4B.
+-- Dependencias funcionales pendientes: compra verificada y moderación.
+
 USE cava;
 
 -- Tabla de reseñas: un usuario puede calificar un producto una sola vez
