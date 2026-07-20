@@ -229,7 +229,7 @@ La conexión queda **VALIDADA** con la siguiente evidencia demostrada:
 Estado actual:
 
 ```text
-FASE 3 CERRADA; FASE 4 CERRADA; FASE 5 CERRADA; FASE 6 NO INICIADA
+FASE 3 CERRADA; FASE 4 CERRADA; FASE 5 CERRADA; FASE 6A CERRADA; FASE 6B NO INICIADA
 ```
 
 ---
@@ -263,22 +263,48 @@ FASE 4 CERRADA; FASE 5 CERRADA; BIGDECIMAL VALIDADO
   NetBeans 20 ejecutó `clean` y `compile`; se compilaron 33 fuentes y ambos
   comandos terminaron con `BUILD SUCCESSFUL`, sin errores ni advertencias.
   Salida completa en `docs/auditorias/INFORME_FASE2.md`.
-- [ ] Todos usan `Conexion.getConn()`.
-- [ ] Todos usan `PreparedStatement`.
-- [ ] Todos cierran recursos.
-- [ ] Todos mapean correctamente.
-- [ ] CRUD real probado.
-- [ ] Errores diferenciados.
-- [ ] Transacciones definidas.
+- [x] Auditoria estatica de Fase 6A: los 15 usan `Conexion.getConn()`,
+  `PreparedStatement` y `try-with-resources`; los recursos JDBC y los mapeos
+  fueron contrastados contra `database/cava.sql` y los 15 Models. Detalle:
+  `docs/auditorias/INFORME_FASE6A.md`.
+- [x] CRUD real probado.
+- [x] Errores diferenciados.
+- [x] Transacciones definidas.
 - [ ] No hay SQL fuera de DAO.
 
 Estado actual:
 
 ```text
-COMPILACIÓN VALIDADA; PENDIENTE DE AUDITORÍA FUNCIONAL Y PRUEBAS
+COMPILACION Y PRUEBAS VALIDADAS; FASE 6 (6A Y 6B) CERRADA;
+FASE 7 NO INICIADA
 ```
 
 ---
+
+## 9.1 Cierre de Fase 6A
+
+La Fase 6A - auditoria y planificacion estatica de los 15 DAO - queda
+**CERRADA**. La Fase 6B - correccion y pruebas - permanece **NO INICIADA**.
+
+- Rama local: `feature/fase-6a-auditoria-dao`.
+- Base verificada: `c43e2171eeb94629c8503cf4bacb0f5b7d94a6a2` (`main` y
+  `origin/main`, sin divergencia antes de la rama).
+- Commit local de cierre: `docs(dao): auditar y planificar fase 6a`.
+- No se realizo push ni se abrio PR.
+
+El detalle de la matriz, los 36 `SELECT *`, decisiones de eliminacion,
+excepciones, transacciones y el plan de 6B se conserva en
+`docs/auditorias/INFORME_FASE6A.md`. No se modificaron DAO, Models, SQL,
+migraciones, servicios ni configuracion durante 6A.
+
+## 9.2 Cierre de Fase 6B
+
+La Fase 6B - correccion y pruebas de los 15 DAO - queda **CERRADA** en la
+rama local `feature/fase-6b-correccion-dao`. Las pruebas pasaron por la
+infraestructura real `Conexion.getConn()` -> `jdbc/CavaDS` -> `CavaPool` con
+rollback de la unidad pedido y conteo final de cero registros en las 15 tablas.
+El detalle de decisiones, pruebas y limites esta en
+`docs/auditorias/INFORME_FASE6B.md`. Fase 7 permanece **NO INICIADA**.
 
 ## 10. Decisiones pendientes
 

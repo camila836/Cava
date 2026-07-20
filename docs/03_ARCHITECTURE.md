@@ -1612,6 +1612,26 @@ No deben presentarse como decisiones cerradas hasta tener evidencia.
 
 ---
 
+## 63. Persistencia DAO - cierre de Fase 6
+
+La capa DAO usa `DAOException` como excepcion tipada y segura.
+`SQLExceptionTranslator` clasifica SQLState y codigos MariaDB sin exponer SQL,
+parametros, credenciales ni detalles JDBC. La capa DAO no registra ni imprime
+errores; la capa web autorizada sera responsable de un unico registro tecnico
+en Fase 7.
+
+Los catalogos se pueden borrar solo cuando no tienen referencias. Usuarios se
+desactivan mediante `isActivo`; productos, inventario y entidades historicas
+no tienen borrado ordinario. Pedidos, detalles, pagos y envios conservan
+trazabilidad y devuelven `OPERATION_NOT_ALLOWED` ante su eliminacion.
+
+Una `Connection` creada por un DAO es responsabilidad de ese DAO. Las
+sobrecargas coordinadas de pedido reciben una conexion externa sin cerrarla ni
+alterar commit, rollback o `autoCommit`; el propietario controla esas
+operaciones.
+
+---
+
 ## 62. Cierre
 
 Esta arquitectura es la base técnica objetivo de CAVA.
