@@ -276,7 +276,7 @@ Estado actual:
 
 ```text
 COMPILACION Y PRUEBAS VALIDADAS; FASE 6 (6A Y 6B) CERRADA;
-FASE 7 NO INICIADA
+FASE 7A CERRADA; FASE 7B NO INICIADA
 ```
 
 ---
@@ -304,7 +304,21 @@ rama local `feature/fase-6b-correccion-dao`. Las pruebas pasaron por la
 infraestructura real `Conexion.getConn()` -> `jdbc/CavaDS` -> `CavaPool` con
 rollback de la unidad pedido y conteo final de cero registros en las 15 tablas.
 El detalle de decisiones, pruebas y limites esta en
-`docs/auditorias/INFORME_FASE6B.md`. Fase 7 permanece **NO INICIADA**.
+`docs/auditorias/INFORME_FASE6B.md`. Al cierre de 6B, Fase 7 permanecia
+**NO INICIADA**; el estado posterior se registra en la seccion 9.3.
+
+## 9.3 Cierre de Fase 7A
+
+La Fase 7A - auditoria y planificacion de Servlets, rutas y contratos HTTP -
+queda **CERRADA** en la rama local
+`feature/fase-7a-auditoria-servlets`. La Fase 7B permanece **NO INICIADA**.
+El detalle de rutas, contratos, severidades, dependencias y plan ejecutable se
+conserva en `docs/auditorias/INFORME_FASE7A.md`.
+
+- Commit local de cierre: `docs(web): auditar y planificar fase 7a`.
+- No se realizo push ni se abrio PR.
+- No se modificaron Java productivo, DAO, Models, SQL, JSP, JavaScript, CSS,
+  `web.xml`, servicios ni configuracion.
 
 ## 10. Decisiones pendientes
 
