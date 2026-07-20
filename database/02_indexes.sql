@@ -1,0 +1,12 @@
+-- CAVA - Fase 4B
+-- Índices adicionales de la primera versión.
+--
+-- No se agregan índices de negocio en esta fase porque no existen consultas,
+-- cardinalidades ni resultados de EXPLAIN autorizados que los justifiquen.
+-- `01_schema.sql` ya declara:
+--   * 15 claves primarias;
+--   * 5 restricciones UNIQUE;
+--   * 14 claves foráneas, cuyos índices son creados por InnoDB.
+--
+-- Este archivo se conserva intencionalmente sin DDL. Los índices futuros
+-- deberán añadirse aquí únicamente con evidencia de uso y validación.

@@ -23,7 +23,7 @@ public class ProductosDAO {
         try (Connection conn = Conexion.getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, modelo.getDescripcionProductos());
-            ps.setDouble(2, modelo.getPrecioProductos());
+            ps.setBigDecimal(2, modelo.getPrecioProductos());
             ps.setInt(3, modelo.getIdUnidadesMedida());
             ps.setInt(4, modelo.getIdCategoriaProductos());
             return ps.executeUpdate() > 0;
@@ -38,7 +38,7 @@ public class ProductosDAO {
         try (Connection conn = Conexion.getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, modelo.getDescripcionProductos());
-            ps.setDouble(2, modelo.getPrecioProductos());
+            ps.setBigDecimal(2, modelo.getPrecioProductos());
             ps.setInt(3, modelo.getIdUnidadesMedida());
             ps.setInt(4, modelo.getIdCategoriaProductos());
             ps.setInt(5, modelo.getIdProductos());
@@ -96,7 +96,7 @@ public class ProductosDAO {
         Productos modelo = new Productos();
         modelo.setIdProductos(rs.getInt("idProductos"));
         modelo.setDescripcionProductos(rs.getString("descripcionProductos"));
-        modelo.setPrecioProductos(rs.getDouble("precioProductos"));
+        modelo.setPrecioProductos(rs.getBigDecimal("precioProductos"));
         modelo.setIdUnidadesMedida(rs.getInt("idUnidadesMedida"));
         modelo.setIdCategoriaProductos(rs.getInt("idCategoriaProductos"));
         return modelo;

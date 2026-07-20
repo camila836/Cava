@@ -4,11 +4,13 @@
  */
 package Modelo;
 
+import java.math.BigDecimal;
+
 public class Productos {
 
     private int    idProductos;
     private String descripcionProductos;
-    private double precioProductos;
+    private BigDecimal precioProductos;
     // FK
     private int    idUnidadesMedida;
     private int    idCategoriaProductos;
@@ -40,13 +42,13 @@ public class Productos {
     
     }
 
-    public double getPrecioProductos()                 { 
+    public BigDecimal getPrecioProductos()                 {
         return precioProductos; 
     
     }
     
     
-    public void   setPrecioProductos(double precioProductos)   {
+    public void   setPrecioProductos(BigDecimal precioProductos)   {
         this.precioProductos = precioProductos; 
     
     }

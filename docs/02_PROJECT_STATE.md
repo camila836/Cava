@@ -14,7 +14,11 @@ CAVA cerró la Fase 3 de conexión y despliegue el 18 de julio de 2026.
 
 El proyecto fue reiniciado utilizando como base los Models. Posteriormente se incorporaron DAO y clases de conexión. La cadena MariaDB → `cava` → `cava_app` → driver común → `CavaPool` → `jdbc/CavaDS` → Cava quedó validada de forma reproducible, incluidos despliegue, consulta real y prueba posterior al reinicio de GlassFish. Los CRUD completos continúan pendientes.
 
-La Fase 4 — Consolidación de base de datos permanece pendiente de autorización. No deben iniciarse funcionalidades nuevas dentro de este cierre.
+La Fase 4 — Consolidación de base de datos quedó cerrada el 19 de julio de
+2026. El instalador separado fue validado desde cero en una base temporal sin
+modificar la base real `cava`. La Fase 5 — Corrección de Models quedó cerrada
+el 19 de julio de 2026: los seis valores `DECIMAL(10,2)` usan `BigDecimal` en
+Java y los cinco DAO relacionados usan la API decimal de JDBC.
 
 ---
 
@@ -54,9 +58,10 @@ recompiló el proyecto durante esta limpieza posterior.
 ### Models
 
 - Existen 15 Models.
-- Deben auditarse contra el esquema SQL.
-- Deben revisarse tipos monetarios.
-- Algunos valores usan `double` y deben evaluarse para `BigDecimal`.
+- Los 15 Models fueron auditados contra el esquema consolidado en Fase 5.
+- Los seis atributos decimales exactos usan `BigDecimal`.
+- Fechas, booleanos, nombres y constructores se revisaron; no requirieron
+  cambios adicionales dentro del alcance de la fase.
 
 ### DAO
 
@@ -71,9 +76,9 @@ recompiló el proyecto durante esta limpieza posterior.
 - Deben probarse uno por uno.
 - Su manejo de errores debe revisarse.
 - Confirmado: usan `Conexion.getConn()`, `PreparedStatement` y
-  `try-with-resources`. Pendiente: varios usan `double`/`setDouble` para
-  precios (Productos, Inventario, Pagos, PedidosCabeza, PedidosDetalle) en
-  vez de `BigDecimal`.
+  `try-with-resources`. Los cinco DAO con columnas `DECIMAL(10,2)` usan
+  `setBigDecimal` y `getBigDecimal`; la auditoría funcional general sigue
+  asignada a Fase 6.
 
 ### Conexión
 
@@ -98,14 +103,19 @@ recompiló el proyecto durante esta limpieza posterior.
 
 - Existe un script principal.
 - Existen migraciones adicionales.
-- No existe todavía un único estado oficial consolidado.
-- `database/cava.sql` es el único script principal canónico.
+- Existe un instalador consolidado y ordenado en `database/00_create_database.sql`
+  a `database/03_seed_catalogs.sql`.
+- `database/cava.sql` fue el script principal canónico hasta la separación de
+  Fase 4B y conserva exactamente las mismas 15 definiciones.
+- `database/cava.sql` se conserva como instantánea de compatibilidad; para
+  instalaciones nuevas la fuente preferida es el orden documentado en
+  `database/README.md`.
 - La copia residual cuyo nombre contenía un espacio antes de `.sql` fue
   eliminada el 17 de julio de 2026, después de comprobar el mismo tamaño,
   SHA-256 y contenido byte a byte que el archivo canónico.
 - No quedan referencias al nombre anterior ni duplicados SQL conocidos dentro
   del alcance de la Fase 2.
-- Debe definirse la primera versión del esquema.
+- Las 15 tablas actuales conforman la primera versión del esquema.
 
 ---
 
@@ -126,7 +136,8 @@ recompiló el proyecto durante esta limpieza posterior.
 - Uso de `root` sin contraseña como configuración observada.
 - Driver MySQL antiguo.
 - Librerías duplicadas.
-- Uso de `double` para dinero o cantidades exactas.
+- ~~Uso de `double` para dinero o cantidades exactas.~~ **Resuelto en Fase 5:**
+  cero coincidencias monetarias residuales en Java.
 - DAO que ocultan errores devolviendo `false`.
 - Scripts SQL no consolidados.
 
@@ -150,8 +161,8 @@ recompiló el proyecto durante esta limpieza posterior.
 | Auditoría inicial | Realizada de forma estática |
 | Estructura | Fase 2 cerrada: paquetes y rutas Java corregidos, duplicado SQL eliminado y compilación validada |
 | Conexión | Fase 3 cerrada; JNDI global, pool, WAR, despliegue y consulta real validados tras reinicio |
-| Base de datos | Requiere consolidación |
-| Models | Existen, requieren auditoría |
+| Base de datos | Fase 4 cerrada; instalador de 15 tablas validado en base temporal |
+| Models | Fase 5 cerrada; 15 Models contrastados y seis atributos decimales migrados a `BigDecimal` |
 | DAO | Los 15 compilan; requieren auditoría funcional y pruebas de persistencia |
 | Servlets | No implementados |
 | Autenticación | No implementada |
@@ -184,6 +195,17 @@ histórica completada. La evidencia detallada y el cierre autoritativo se
 encuentran en `docs/auditorias/INFORME_FASE3.md` y
 `docs/auditorias/evidencias/fase3/`.
 
+La Fase 4A — Auditoría y planificación de consolidación de base de datos quedó
+**CERRADA** el 19 de julio de 2026. La Fase 4B quedó **CERRADA** el mismo día:
+los scripts `00`–`03` fueron validados desde cero en una base temporal, las
+migraciones futuras quedaron ordenadas y `cava` permaneció intacta. Evidencia:
+`docs/auditorias/INFORME_FASE4A.md` e `INFORME_FASE4B.md`.
+
+La Fase 5 — Corrección de Models quedó **CERRADA** el 19 de julio de 2026.
+Se corrigió exclusivamente el contrato decimal de cinco Models y cinco DAO,
+sin alterar SQL ni la base real. La evidencia está en
+`docs/auditorias/INFORME_FASE5.md`.
+
 ---
 
 ## 7. Conexión: criterio de cierre
@@ -207,27 +229,29 @@ La conexión queda **VALIDADA** con la siguiente evidencia demostrada:
 Estado actual:
 
 ```text
-FASE 3 CERRADA; FASE 4 PENDIENTE DE AUTORIZACIÓN
+FASE 3 CERRADA; FASE 4 CERRADA; FASE 5 CERRADA; FASE 6 NO INICIADA
 ```
 
 ---
 
 ## 8. Base de datos: criterio de cierre
 
-- [ ] Script inicial oficial.
-- [ ] Migraciones ordenadas.
-- [ ] Base creada desde cero.
-- [ ] Datos iniciales reproducibles.
-- [ ] Claves foráneas validadas.
-- [ ] Índices revisados.
-- [ ] Tipos comparados con Models.
-- [ ] Dinero migrado a `DECIMAL` y `BigDecimal`.
-- [ ] Matriz de correspondencia terminada.
+- [x] Script inicial oficial separado en `00`–`03`.
+- [x] Migraciones ordenadas y aplazadas para Fase 12.
+- [x] Base creada desde cero en entorno temporal.
+- [x] Semillas reproducibles: no hay valores autorizados y el script vacío se
+  ejecutó dos veces sin duplicados.
+- [x] Claves foráneas validadas mediante `information_schema`.
+- [x] Índices revisados: PK, UNIQUE e índices FK confirmados; sin índices de
+  negocio inventados.
+- [x] Tipos comparados con Models; la precisión Java queda asignada a Fase 5.
+- [x] Dinero y cantidades exactas usan `DECIMAL(10,2)` y `BigDecimal`.
+- [x] Matriz de correspondencia terminada en Fase 4A.
 
 Estado actual:
 
 ```text
-PENDIENTE
+FASE 4 CERRADA; FASE 5 CERRADA; BIGDECIMAL VALIDADO
 ```
 
 ---
@@ -268,7 +292,7 @@ COMPILACIÓN VALIDADA; PENDIENTE DE AUDITORÍA FUNCIONAL Y PRUEBAS
 - Uso de Services.
 - ~~Convención SQL definitiva.~~ Resuelto: camelCase confirmado contra el esquema real (ver `docs/04_DATABASE.md` §5).
 - Política de eliminación.
-- Tablas de la primera versión.
+- ~~Tablas de la primera versión.~~ Resuelto: son las 15 tablas consolidadas.
 - Formato estándar de JSON.
 - Ubicación de JSP protegidos.
 

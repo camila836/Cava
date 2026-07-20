@@ -163,7 +163,9 @@ Demostrar que la conexión JNDI y el pool funcionan sin configuraciones manuales
 
 # Fase 4 — Consolidación de base de datos
 
-**Estado: PENDIENTE DE AUTORIZACIÓN; no iniciada durante el cierre de Fase 3.**
+**Estado: CERRADA el 19 de julio de 2026.** Auditoría en
+`docs/auditorias/INFORME_FASE4A.md`; implementación y validación temporal en
+`docs/auditorias/INFORME_FASE4B.md`.
 
 ## Objetivo
 
@@ -184,15 +186,19 @@ Definir un esquema reproducible y coherente.
 
 ## Criterios de aceptación
 
-- [ ] La base se crea desde cero.
-- [ ] Las 15 entidades principales están claras.
-- [ ] Las migraciones tienen orden.
-- [ ] No hay scripts contradictorios.
-- [ ] Los tipos son compatibles.
+- [x] La base se crea desde cero.
+- [x] Las 15 entidades principales están claras.
+- [x] Las migraciones tienen orden y permanecen aplazadas.
+- [x] No hay scripts contradictorios.
+- [x] Los tipos SQL están consolidados; los ajustes de precisión Java quedan
+  formalmente asignados a la Fase 5.
 
 ---
 
 # Fase 5 — Corrección de Models
+
+**Estado: CERRADA el 19 de julio de 2026.** La auditoría, implementación y
+pruebas están documentadas en `docs/auditorias/INFORME_FASE5.md`.
 
 ## Objetivo
 
@@ -211,11 +217,11 @@ Alinear Java con MySQL.
 
 ## Criterios de aceptación
 
-- [ ] Cada atributo tiene columna.
-- [ ] Los tipos coinciden.
-- [ ] No hay `double` monetario.
-- [ ] El proyecto compila.
-- [ ] Los cambios están documentados.
+- [x] Cada atributo tiene columna o un alias Java documentado.
+- [x] Los tipos coinciden.
+- [x] No hay `double` monetario ni decimal exacto en Java.
+- [x] El proyecto compila.
+- [x] Los cambios están documentados.
 
 ---
 

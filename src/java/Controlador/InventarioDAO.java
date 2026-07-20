@@ -23,7 +23,7 @@ public class InventarioDAO {
         try (Connection conn = Conexion.getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, modelo.getDescripcionInventario());
-            ps.setDouble(2, modelo.getStock());
+            ps.setBigDecimal(2, modelo.getStock());
             ps.setInt(3, modelo.getIdProductos());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class InventarioDAO {
         try (Connection conn = Conexion.getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, modelo.getDescripcionInventario());
-            ps.setDouble(2, modelo.getStock());
+            ps.setBigDecimal(2, modelo.getStock());
             ps.setInt(3, modelo.getIdProductos());
             ps.setInt(4, modelo.getIdInventario());
             return ps.executeUpdate() > 0;
@@ -114,7 +114,7 @@ public class InventarioDAO {
         Inventario modelo = new Inventario();
         modelo.setIdInventario(rs.getInt("idInventario"));
         modelo.setDescripcionInventario(rs.getString("descripcionInventario"));
-        modelo.setStock(rs.getDouble("stock"));
+        modelo.setStock(rs.getBigDecimal("stock"));
         modelo.setIdProductos(rs.getInt("idProductos"));
         return modelo;
     }

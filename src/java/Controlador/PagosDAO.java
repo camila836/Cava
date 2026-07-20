@@ -24,7 +24,7 @@ public class PagosDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, modelo.getFechaPagos() != null ? java.sql.Timestamp.valueOf(modelo.getFechaPagos()) : null);
             ps.setString(2, modelo.getDescripcionPagos());
-            ps.setDouble(3, modelo.getMonto());
+            ps.setBigDecimal(3, modelo.getMonto());
             ps.setString(4, modelo.getReferenciaPago());
             ps.setString(5, modelo.getComprobantePago());
             ps.setInt(6, modelo.getIdMediosPagos());
@@ -42,7 +42,7 @@ public class PagosDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, modelo.getFechaPagos() != null ? java.sql.Timestamp.valueOf(modelo.getFechaPagos()) : null);
             ps.setString(2, modelo.getDescripcionPagos());
-            ps.setDouble(3, modelo.getMonto());
+            ps.setBigDecimal(3, modelo.getMonto());
             ps.setString(4, modelo.getReferenciaPago());
             ps.setString(5, modelo.getComprobantePago());
             ps.setInt(6, modelo.getIdMediosPagos());
@@ -124,7 +124,7 @@ public class PagosDAO {
         modelo.setIdPagos(rs.getInt("idPagos"));
         modelo.setFechaPagos((rs.getTimestamp("fechaPagos") != null ? rs.getTimestamp("fechaPagos").toLocalDateTime() : null));
         modelo.setDescripcionPagos(rs.getString("descripcionPagos"));
-        modelo.setMonto(rs.getDouble("monto"));
+        modelo.setMonto(rs.getBigDecimal("monto"));
         modelo.setReferenciaPago(rs.getString("referenciaPago"));
         modelo.setComprobantePago(rs.getString("comprobantePago"));
         modelo.setIdMediosPagos(rs.getInt("idMediosPagos"));
