@@ -31,9 +31,9 @@ Java y los cinco DAO relacionados usan la API decimal de JDBC.
 | Jakarta EE 10 Web | Confirmado |
 | Eclipse GlassFish 7.0.9 | Confirmado por `asadmin`; la carpeta local `glassfish-7.0.25` tiene nombre legado |
 | MariaDB 10.4.32 mediante XAMPP | Confirmado en puerto 3306 |
-| Servlets funcionales | No encontrados |
+| Servlets funcionales | `InicioServlet` y `ProductosServlet`, validados en Fase 7 |
 | JSP | Existen |
-| JavaScript | Existe |
+| JavaScript | No existen archivos `.js`; Fase 7 no requirió JavaScript ni AJAX |
 | Bootstrap | Debe confirmarse uso real |
 
 ### Cambio de ubicación del proyecto
@@ -93,9 +93,11 @@ recompiló el proyecto durante esta limpieza posterior.
 ### Frontend
 
 - Existen JSP principales.
-- **Verificado contra el ZIP real (julio 2026):** `src/java/Servlets/` está vacía. No existen copias de JSP dentro de ella. El hallazgo anterior sobre "copias duplicadas de JSP" ya no aplica y se elimina de los pendientes.
-- `src/java/Servlets/` se conserva como ubicación oficial de las futuras clases Servlet, que deberán declarar `package Servlets;`.
-- Existen CSS y JavaScript.
+- `src/java/Servlets/` contiene `InicioServlet` y `ProductosServlet`, ambos con
+  `package Servlets;` y rutas GET públicas validadas.
+- Existen CSS; no se agregaron JavaScript ni flujos AJAX en Fase 7.
+- `Index.jsp`, `Productos.jsp` y la vista común de error usan navegación
+  tradicional y no crean sesión.
 - El panel administrativo contiene o contenía datos simulados.
 - Deben revisarse rutas y referencias de recursos.
 
@@ -125,7 +127,9 @@ recompiló el proyecto durante esta limpieza posterior.
 
 - ~~DAO con paquete declarado (`DAO`) que no coincide con su carpeta física (`Controlador`).~~ **Resuelto:** los 15 archivos en `src/java/Controlador/` ya declaran `package Controlador;`.
 - ~~JSP duplicados dentro de `src/java`.~~ Descartado: verificado que `src/java/Servlets/` está vacía.
-- Ausencia de Servlets funcionales — confirmado, la carpeta está vacía (pendiente para Fase 7, fuera de alcance de Fase 2).
+- ~~Ausencia de Servlets funcionales.~~ **Resuelto en Fase 7:** existen dos
+  controladores públicos con integración de solo lectura y manejo seguro de
+  errores.
 - **Confirmado:** 0 imports `import DAO.*` en todo el proyecto.
 - **Confirmado:** 0 usos de `DriverManager` en el código.
 - ~~Copia ambigua del script canónico.~~ **Resuelto:** la copia residual fue
@@ -164,12 +168,12 @@ recompiló el proyecto durante esta limpieza posterior.
 | Base de datos | Fase 4 cerrada; instalador de 15 tablas validado en base temporal |
 | Models | Fase 5 cerrada; 15 Models contrastados y seis atributos decimales migrados a `BigDecimal` |
 | DAO | Los 15 compilan; requieren auditoría funcional y pruebas de persistencia |
-| Servlets | No implementados |
+| Servlets | Fase 7 cerrada: `/inicio` y `/productos` implementados y validados |
 | Autenticación | No implementada |
 | Seguridad | No implementada |
 | Dashboard real | No implementado |
-| Tienda conectada | No implementada |
-| Pruebas | No consolidadas |
+| Tienda conectada | Listado público de productos conectado en solo lectura; experiencia completa pendiente de Fase 11 |
+| Pruebas | Fase 7 validó unidades, JSP, WAR, JNDI de lectura y contratos HTTP públicos |
 | Entrega | No iniciada |
 
 ---
@@ -276,7 +280,7 @@ Estado actual:
 
 ```text
 COMPILACION Y PRUEBAS VALIDADAS; FASE 6 (6A Y 6B) CERRADA;
-FASE 7 NO INICIADA
+FASE 7 (7A Y 7B) CERRADA; FASE 8 NO INICIADA
 ```
 
 ---
@@ -304,7 +308,35 @@ rama local `feature/fase-6b-correccion-dao`. Las pruebas pasaron por la
 infraestructura real `Conexion.getConn()` -> `jdbc/CavaDS` -> `CavaPool` con
 rollback de la unidad pedido y conteo final de cero registros en las 15 tablas.
 El detalle de decisiones, pruebas y limites esta en
-`docs/auditorias/INFORME_FASE6B.md`. Fase 7 permanece **NO INICIADA**.
+`docs/auditorias/INFORME_FASE6B.md`. Al cierre de 6B, Fase 7 permanecia
+**NO INICIADA**; el estado posterior se registra en la seccion 9.3.
+
+## 9.3 Cierre de Fase 7A
+
+La Fase 7A - auditoria y planificacion de Servlets, rutas y contratos HTTP -
+queda **CERRADA** en la rama local
+`feature/fase-7a-auditoria-servlets`. La Fase 7B permanece **NO INICIADA**.
+El detalle de rutas, contratos, severidades, dependencias y plan ejecutable se
+conserva en `docs/auditorias/INFORME_FASE7A.md`.
+
+- Commit local de cierre: `docs(web): auditar y planificar fase 7a`.
+- No se realizo push ni se abrio PR.
+- No se modificaron Java productivo, DAO, Models, SQL, JSP, JavaScript, CSS,
+  `web.xml`, servicios ni configuracion.
+
+## 9.4 Cierre de Fase 7B
+
+La Fase 7B - implementacion y validacion de infraestructura web publica - queda
+**CERRADA** en la rama local `feature/fase-7b-infraestructura-web`. Se validaron
+`GET /inicio`, `GET /productos`, la raiz, UTF-8, 404/405 seguros, lectura real
+por `ProductosDAO`, `CavaPool` y `jdbc/CavaDS`, con 15 tablas y cero registros.
+El detalle esta en `docs/auditorias/INFORME_FASE7B.md`.
+
+- Commits locales: `feat(web): crear infraestructura publica y manejo de
+  errores`, `test(web): validar servlets y contratos http` y
+  `docs(web): cerrar fase 7`.
+- No se realizo push ni se abrio PR.
+- Fase 8 permanece **NO INICIADA**.
 
 ## 10. Decisiones pendientes
 

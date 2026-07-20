@@ -1029,6 +1029,24 @@ application/json;charset=UTF-8
 
 Se recomienda centralizar esta configuración mediante un filtro.
 
+### Infraestructura pública validada en Fase 7
+
+La primera implementación web cerrada utiliza navegación tradicional HTML/JSP:
+
+| Ruta | Controlador | Resultado |
+|---|---|---|
+| `/inicio` | `InicioServlet` | forward interno a `Index.jsp` |
+| `/productos` | `ProductosServlet` | `ProductosDAO.listarTodos()` -> atributo `productos` -> forward a `Productos.jsp` |
+
+Ambas rutas admiten únicamente GET; el resto de métodos conserva el 405
+estándar de `HttpServlet`. La raíz usa `inicio` como `welcome-file`. Los
+Servlets se registran con `@WebServlet`; `web.xml` ordena `EncodingFilter`,
+`WebErrorFilter`, el welcome-file y las páginas de error, sin duplicar mapeos.
+
+Las vistas públicas declaran `session="false"`. No se crea sesión, no se
+devuelve JSON y no se implementa seguridad provisional. Login, sesión,
+autorización y protección de rutas pertenecen a Fase 8.
+
 ---
 
 ## 36. Validación
@@ -1313,9 +1331,16 @@ Clasificación recomendada:
 | Sin permisos | 403 |
 | Recurso no encontrado | 404 |
 | Conflicto o duplicado | 409 |
+| Persistencia temporalmente no disponible | 503 |
 | Error interno | 500 |
 
 Los mensajes deben ser comprensibles, pero no exponer SQL, rutas internas ni stack traces.
+
+La frontera web traduce `DAOErrorType` así: `INVALID_DATA` a 400,
+`NOT_FOUND` a 404, `DUPLICATE`, `FOREIGN_KEY` y `OPERATION_NOT_ALLOWED` a
+409, `CONNECTION` a 503, y `SQL_ERROR` o un error inesperado a 500. El forward
+usa una vista común bajo `WEB-INF`; la causa técnica se registra una sola vez
+con `java.util.logging` y nunca se envía al navegador.
 
 ---
 

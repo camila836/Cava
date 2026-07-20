@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CAVA — Alta Chocolatería Colombiana</title>
-  <link rel="stylesheet" href="css/Style.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Style.css">
 </head>
 <body>
 
@@ -20,14 +20,14 @@
 
   <!-- NAVEGACIÓN -->
   <nav>
-    <a class="nav-logo" onclick="navigate('inicio')">
+    <a class="nav-logo" href="${pageContext.request.contextPath}/inicio">
       <span class="nav-logo-mark">✦</span> CAVA
     </a>
 
     <ul class="nav-links">
-      <li><a onclick="navigate('inicio')" data-panel="inicio" class="active">Inicio</a></li>
+      <li><a href="${pageContext.request.contextPath}/inicio" class="active">Inicio</a></li>
       <li><a onclick="navigate('quienes')" data-panel="quienes">Quiénes Somos</a></li>
-      <li><a onclick="navigate('productos')" data-panel="productos">La Tienda</a></li>
+      <li><a href="${pageContext.request.contextPath}/productos">La Tienda</a></li>
       <li><a onclick="navigate('servicios')" data-panel="servicios">Servicios</a></li>
       <li><a onclick="navigate('historial')" data-panel="historial">Mis Pedidos</a></li>
     </ul>
@@ -38,11 +38,10 @@
           <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
         </svg>
-        <%-- Ejemplo de integración JSP para el contador --%>
-        <span class="cart-count" id="cart-count">${sessionScope.cartCount != null ? sessionScope.cartCount : 0}</span>
+        <span class="cart-count" id="cart-count">0</span>
       </button>
-      <a class="btn-premium-round" href="InicioSesion.jsp">Entrar</a>
-      <a class="btn-premium-round btn-filled" href="RegistrarUsusario.jsp">Registrarse</a>
+      <a class="btn-premium-round" href="${pageContext.request.contextPath}/InicioSesion.jsp">Entrar</a>
+      <a class="btn-premium-round btn-filled" href="${pageContext.request.contextPath}/RegistrarUsuario.jsp">Registrarse</a>
       <button class="btn-premium-round" onclick="navigate('contacto')">Asesoría</button>
     </div>
   </nav>
@@ -51,7 +50,7 @@
   <section class="panel active" id="panel-inicio">
     <div class="video-bg-container">
       <video class="video-bg" autoplay muted loop playsinline>
-        <source src="CAVA.mp4" type="video/mp4">
+        <source src="${pageContext.request.contextPath}/Videos/CAVA.mp4" type="video/mp4">
       </video>
       <div class="video-overlay"></div>
       <div class="hero-content">
@@ -62,7 +61,7 @@
           <em>es una inversión en</em><br>tu felicidad.
         </h1>
         <div class="hero-actions">
-          <button class="btn-primary" onclick="navigate('productos')">Explorar la tienda</button>
+          <a class="btn-primary" href="${pageContext.request.contextPath}/productos">Explorar la tienda</a>
           <button class="btn-outline" onclick="navigate('quienes')">Nuestra historia</button>
         </div>
       </div>
@@ -84,6 +83,5 @@
     </footer>
   </section>
 
-  <script src="javaScript/Script.js"></script>
 </body>
 </html>

@@ -55,6 +55,31 @@ body::before {
   opacity: 1;
 }
 
+/* Mensajes públicos compartidos por la infraestructura web. */
+.public-message {
+  max-width: 720px;
+  margin: 12vh auto 0;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.public-message-code {
+  color: var(--caramel);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+.public-message h1 {
+  color: var(--cacao-deep);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 400;
+  margin: 0.5rem 0 1rem;
+}
+.public-message > p:not(.public-message-code) {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
 /* ── TICKER ─────────────────────────────────────────────── */
 .ticker-wrap {
   position: fixed;
