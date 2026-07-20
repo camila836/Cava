@@ -22,8 +22,8 @@ public class PedidosDetalleDAO {
         String sql = "INSERT INTO pedidosDetalle (cantidadUnitaria, subtotalPed, idPedidosCabeza, idProductos) VALUES (?, ?, ?, ?)";
         try (Connection conn = Conexion.getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, modelo.getCantidadUnitaria());
-            ps.setDouble(2, modelo.getSubtotalPed());
+            ps.setBigDecimal(1, modelo.getCantidadUnitaria());
+            ps.setBigDecimal(2, modelo.getSubtotalPed());
             ps.setInt(3, modelo.getIdPedidosCabeza());
             ps.setInt(4, modelo.getIdProductos());
             return ps.executeUpdate() > 0;
@@ -37,8 +37,8 @@ public class PedidosDetalleDAO {
         String sql = "UPDATE pedidosDetalle SET cantidadUnitaria = ?, subtotalPed = ?, idPedidosCabeza = ?, idProductos = ? WHERE idPedidosDetalle = ?";
         try (Connection conn = Conexion.getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, modelo.getCantidadUnitaria());
-            ps.setDouble(2, modelo.getSubtotalPed());
+            ps.setBigDecimal(1, modelo.getCantidadUnitaria());
+            ps.setBigDecimal(2, modelo.getSubtotalPed());
             ps.setInt(3, modelo.getIdPedidosCabeza());
             ps.setInt(4, modelo.getIdProductos());
             ps.setInt(5, modelo.getIdPedidosDetalle());
@@ -116,8 +116,8 @@ public class PedidosDetalleDAO {
     private PedidosDetalle mapear(ResultSet rs) throws SQLException {
         PedidosDetalle modelo = new PedidosDetalle();
         modelo.setIdPedidosDetalle(rs.getInt("idPedidosDetalle"));
-        modelo.setCantidadUnitaria(rs.getDouble("cantidadUnitaria"));
-        modelo.setSubtotalPed(rs.getDouble("subtotalPed"));
+        modelo.setCantidadUnitaria(rs.getBigDecimal("cantidadUnitaria"));
+        modelo.setSubtotalPed(rs.getBigDecimal("subtotalPed"));
         modelo.setIdPedidosCabeza(rs.getInt("idPedidosCabeza"));
         modelo.setIdProductos(rs.getInt("idProductos"));
         return modelo;

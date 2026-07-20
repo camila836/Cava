@@ -4,11 +4,13 @@
  */
 package Modelo;
 
+import java.math.BigDecimal;
+
 public class Inventario {
 
     private int    idInventario;
     private String descripcionInventario;
-    private double stock;
+    private BigDecimal stock;
     private int    idProductos;
     
     
@@ -39,12 +41,12 @@ public class Inventario {
     
     }
 
-    public double getStock()               { 
+    public BigDecimal getStock()               {
         return stock; 
     
     }
     
-    public void   setStock(double stock)   { 
+    public void   setStock(BigDecimal stock)   {
         this.stock = stock; 
     
     }

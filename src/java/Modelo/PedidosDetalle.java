@@ -4,11 +4,13 @@
  */
 package Modelo;
 
+import java.math.BigDecimal;
+
 public class PedidosDetalle {
 
     private int    idPedidosDetalle;
-    private double cantidadUnitaria;
-    private double subtotalPed;
+    private BigDecimal cantidadUnitaria;
+    private BigDecimal subtotalPed;
     private int    idPedidosCabeza;
     private int    idProductos;
 
@@ -29,25 +31,25 @@ public class PedidosDetalle {
     }
     
 
-    public double getCantidadUnitaria()                      { 
+    public BigDecimal getCantidadUnitaria()                      {
         return cantidadUnitaria; 
     
     }
     
     
-    public void   setCantidadUnitaria(double cantidadUnitaria)     { 
+    public void   setCantidadUnitaria(BigDecimal cantidadUnitaria)     {
         this.cantidadUnitaria = cantidadUnitaria; 
     
     }
     
 
-    public double getSubtotalPed()                  { 
+    public BigDecimal getSubtotalPed()                  {
         return subtotalPed; 
     
     }
     
     
-    public void   setSubtotalPed(double subtotalPed)   { 
+    public void   setSubtotalPed(BigDecimal subtotalPed)   {
         this.subtotalPed = subtotalPed; 
     
     }

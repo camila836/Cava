@@ -197,6 +197,9 @@ Definir un esquema reproducible y coherente.
 
 # Fase 5 — Corrección de Models
 
+**Estado: CERRADA el 19 de julio de 2026.** La auditoría, implementación y
+pruebas están documentadas en `docs/auditorias/INFORME_FASE5.md`.
+
 ## Objetivo
 
 Alinear Java con MySQL.
@@ -214,11 +217,11 @@ Alinear Java con MySQL.
 
 ## Criterios de aceptación
 
-- [ ] Cada atributo tiene columna.
-- [ ] Los tipos coinciden.
-- [ ] No hay `double` monetario.
-- [ ] El proyecto compila.
-- [ ] Los cambios están documentados.
+- [x] Cada atributo tiene columna o un alias Java documentado.
+- [x] Los tipos coinciden.
+- [x] No hay `double` monetario ni decimal exacto en Java.
+- [x] El proyecto compila.
+- [x] Los cambios están documentados.
 
 ---
 

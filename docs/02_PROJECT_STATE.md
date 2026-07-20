@@ -16,7 +16,9 @@ El proyecto fue reiniciado utilizando como base los Models. Posteriormente se in
 
 La Fase 4 — Consolidación de base de datos quedó cerrada el 19 de julio de
 2026. El instalador separado fue validado desde cero en una base temporal sin
-modificar la base real `cava`. La Fase 5 permanece no iniciada.
+modificar la base real `cava`. La Fase 5 — Corrección de Models quedó cerrada
+el 19 de julio de 2026: los seis valores `DECIMAL(10,2)` usan `BigDecimal` en
+Java y los cinco DAO relacionados usan la API decimal de JDBC.
 
 ---
 
@@ -56,9 +58,10 @@ recompiló el proyecto durante esta limpieza posterior.
 ### Models
 
 - Existen 15 Models.
-- Deben auditarse contra el esquema SQL.
-- Deben revisarse tipos monetarios.
-- Algunos valores usan `double` y deben evaluarse para `BigDecimal`.
+- Los 15 Models fueron auditados contra el esquema consolidado en Fase 5.
+- Los seis atributos decimales exactos usan `BigDecimal`.
+- Fechas, booleanos, nombres y constructores se revisaron; no requirieron
+  cambios adicionales dentro del alcance de la fase.
 
 ### DAO
 
@@ -73,9 +76,9 @@ recompiló el proyecto durante esta limpieza posterior.
 - Deben probarse uno por uno.
 - Su manejo de errores debe revisarse.
 - Confirmado: usan `Conexion.getConn()`, `PreparedStatement` y
-  `try-with-resources`. Pendiente: varios usan `double`/`setDouble` para
-  precios (Productos, Inventario, Pagos, PedidosCabeza, PedidosDetalle) en
-  vez de `BigDecimal`.
+  `try-with-resources`. Los cinco DAO con columnas `DECIMAL(10,2)` usan
+  `setBigDecimal` y `getBigDecimal`; la auditoría funcional general sigue
+  asignada a Fase 6.
 
 ### Conexión
 
@@ -133,7 +136,8 @@ recompiló el proyecto durante esta limpieza posterior.
 - Uso de `root` sin contraseña como configuración observada.
 - Driver MySQL antiguo.
 - Librerías duplicadas.
-- Uso de `double` para dinero o cantidades exactas.
+- ~~Uso de `double` para dinero o cantidades exactas.~~ **Resuelto en Fase 5:**
+  cero coincidencias monetarias residuales en Java.
 - DAO que ocultan errores devolviendo `false`.
 - Scripts SQL no consolidados.
 
@@ -158,7 +162,7 @@ recompiló el proyecto durante esta limpieza posterior.
 | Estructura | Fase 2 cerrada: paquetes y rutas Java corregidos, duplicado SQL eliminado y compilación validada |
 | Conexión | Fase 3 cerrada; JNDI global, pool, WAR, despliegue y consulta real validados tras reinicio |
 | Base de datos | Fase 4 cerrada; instalador de 15 tablas validado en base temporal |
-| Models | Existen, requieren auditoría |
+| Models | Fase 5 cerrada; 15 Models contrastados y seis atributos decimales migrados a `BigDecimal` |
 | DAO | Los 15 compilan; requieren auditoría funcional y pruebas de persistencia |
 | Servlets | No implementados |
 | Autenticación | No implementada |
@@ -197,6 +201,11 @@ los scripts `00`–`03` fueron validados desde cero en una base temporal, las
 migraciones futuras quedaron ordenadas y `cava` permaneció intacta. Evidencia:
 `docs/auditorias/INFORME_FASE4A.md` e `INFORME_FASE4B.md`.
 
+La Fase 5 — Corrección de Models quedó **CERRADA** el 19 de julio de 2026.
+Se corrigió exclusivamente el contrato decimal de cinco Models y cinco DAO,
+sin alterar SQL ni la base real. La evidencia está en
+`docs/auditorias/INFORME_FASE5.md`.
+
 ---
 
 ## 7. Conexión: criterio de cierre
@@ -220,7 +229,7 @@ La conexión queda **VALIDADA** con la siguiente evidencia demostrada:
 Estado actual:
 
 ```text
-FASE 3 CERRADA; FASE 4 CERRADA; FASE 5 NO INICIADA
+FASE 3 CERRADA; FASE 4 CERRADA; FASE 5 CERRADA; FASE 6 NO INICIADA
 ```
 
 ---
@@ -236,13 +245,13 @@ FASE 3 CERRADA; FASE 4 CERRADA; FASE 5 NO INICIADA
 - [x] Índices revisados: PK, UNIQUE e índices FK confirmados; sin índices de
   negocio inventados.
 - [x] Tipos comparados con Models; la precisión Java queda asignada a Fase 5.
-- [ ] Dinero migrado a `DECIMAL` y `BigDecimal`.
+- [x] Dinero y cantidades exactas usan `DECIMAL(10,2)` y `BigDecimal`.
 - [x] Matriz de correspondencia terminada en Fase 4A.
 
 Estado actual:
 
 ```text
-FASE 4 CERRADA; BIGDECIMAL PENDIENTE PARA FASE 5
+FASE 4 CERRADA; FASE 5 CERRADA; BIGDECIMAL VALIDADO
 ```
 
 ---

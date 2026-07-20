@@ -5,7 +5,8 @@
 > **Motor:** MySQL  
 > **Estado:** Esquema de primera versión consolidado y validado en Fase 4B
 > **Fuente de verdad:** instalador SQL `00`–`03`, validado estructuralmente;
-> la precisión de Models y DAO se corrige en Fases 5 y 6
+> la precisión Java de las seis columnas `DECIMAL(10,2)` fue corregida en
+> Fase 5; la auditoría funcional general de DAO corresponde a Fase 6
 
 ---
 
@@ -582,7 +583,7 @@ Antes de aprobar Models y DAO se debe construir una matriz:
 
 | Entidad | Atributo Java | Columna SQL | Tipo Java | Tipo SQL | Nulo | Estado |
 |---|---|---|---|---|---|---|
-| Producto | precio | precio | BigDecimal | DECIMAL(10,2) | No | Pendiente |
+| Productos | precioProductos | precioProductos | BigDecimal | DECIMAL(10,2) | No | Validado en Fase 5 |
 
 La matriz debe cubrir todas las entidades.
 
@@ -614,8 +615,8 @@ La base se considera estable cuando:
 - [x] No hay scripts contradictorios; `cava.sql` coincide con `01_schema.sql`.
 - [x] Las claves foráneas y sus reglas fueron validadas.
 - [x] Los índices principales existen.
-- [ ] Los tipos coinciden con Java.
-- [ ] Dinero usa `DECIMAL` y `BigDecimal`.
+- [x] Los tipos del esquema consolidado coinciden con los 15 Models.
+- [x] Dinero y cantidades exactas usan `DECIMAL(10,2)` y `BigDecimal`.
 - [x] Los datos iniciales son reproducibles: no existen valores autorizados y
   el script reservado no ejecuta DML.
 - [x] Los 15 DAO usan nombres reales, confirmado en Fase 4A.
@@ -629,8 +630,29 @@ La base se considera estable cuando:
 - ~~Consolidar el esquema principal.~~ Cerrado en Fase 4B.
 - ~~Definir tablas de la primera versión.~~ Cerrado: 15 tablas.
 - ~~Ordenar migraciones.~~ Cerrado documentalmente; ejecución aplazada a Fase 12.
-- Revisar tipos monetarios.
+- ~~Revisar tipos monetarios.~~ Cerrado en Fase 5 para las seis columnas
+  `DECIMAL(10,2)`.
 - Revisar claves foráneas.
 - Revisar eliminación física o lógica.
 - ~~Crear matriz Model–tabla–columna.~~ Cerrado en Fase 4A.
 - Validar funcionalmente migraciones adicionales en Fase 12.
+
+---
+
+## 23. Correspondencia decimal cerrada en Fase 5
+
+La Fase 5 conservó intacto el esquema SQL y alineó los contratos Java:
+
+| Tabla | Columna | Model | DAO/JDBC |
+|---|---|---|---|
+| `productos` | `precioProductos` | `BigDecimal` | `setBigDecimal` / `getBigDecimal` |
+| `inventario` | `stock` | `BigDecimal` | `setBigDecimal` / `getBigDecimal` |
+| `pedidosCabeza` | `valorTotal` | `BigDecimal` | `setBigDecimal` / `getBigDecimal` |
+| `pedidosDetalle` | `cantidadUnitaria` | `BigDecimal` | `setBigDecimal` / `getBigDecimal` |
+| `pedidosDetalle` | `subtotalPed` | `BigDecimal` | `setBigDecimal` / `getBigDecimal` |
+| `pagos` | `monto` | `BigDecimal` | `setBigDecimal` / `getBigDecimal` |
+
+No se aplicó `setScale`, `RoundingMode` ni una restricción Java nueva sobre
+signos porque no existe una regla funcional autoritativa. Las restricciones
+`NOT NULL`, precisión y escala permanecen definidas en SQL; la futura capa web
+deberá validar texto y límites antes de invocar los DAO.

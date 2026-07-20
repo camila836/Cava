@@ -25,7 +25,7 @@ public class PedidosCabezaDAO {
             ps.setString(1, modelo.getNumeroPedido());
             ps.setTimestamp(2, modelo.getFechaPedido() != null ? java.sql.Timestamp.valueOf(modelo.getFechaPedido()) : null);
             ps.setString(3, modelo.getDescripcionPedido());
-            ps.setDouble(4, modelo.getValorTotal());
+            ps.setBigDecimal(4, modelo.getValorTotal());
             ps.setInt(5, modelo.getIdUsuarios());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -41,7 +41,7 @@ public class PedidosCabezaDAO {
             ps.setString(1, modelo.getNumeroPedido());
             ps.setTimestamp(2, modelo.getFechaPedido() != null ? java.sql.Timestamp.valueOf(modelo.getFechaPedido()) : null);
             ps.setString(3, modelo.getDescripcionPedido());
-            ps.setDouble(4, modelo.getValorTotal());
+            ps.setBigDecimal(4, modelo.getValorTotal());
             ps.setInt(5, modelo.getIdUsuarios());
             ps.setInt(6, modelo.getIdPedidosCabeza());
             return ps.executeUpdate() > 0;
@@ -121,7 +121,7 @@ public class PedidosCabezaDAO {
         modelo.setNumeroPedido(rs.getString("numeroPedido"));
         modelo.setFechaPedido((rs.getTimestamp("fechaPedido") != null ? rs.getTimestamp("fechaPedido").toLocalDateTime() : null));
         modelo.setDescripcionPedido(rs.getString("descripcionPedido"));
-        modelo.setValorTotal(rs.getDouble("valorTotal"));
+        modelo.setValorTotal(rs.getBigDecimal("valorTotal"));
         modelo.setIdUsuarios(rs.getInt("idUsuarios"));
         return modelo;
     }

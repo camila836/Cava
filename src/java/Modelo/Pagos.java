@@ -4,6 +4,7 @@
  */
 package Modelo;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Pagos {
@@ -11,7 +12,7 @@ public class Pagos {
     private int           idPagos;
     private LocalDateTime fechaPagos;
     private String        descripcionPagos;
-    private double        monto;
+    private BigDecimal    monto;
     private String        referenciaPago;
     private String        comprobantePago;
     // FK
@@ -30,8 +31,8 @@ public class Pagos {
     public String        getDescripcionPagos()                             { return descripcionPagos; }
     public void          setDescripcionPagos(String descripcionPagos)      { this.descripcionPagos = descripcionPagos; }
 
-    public double        getMonto()                { return monto; }
-    public void          setMonto(double monto)    { this.monto = monto; }
+    public BigDecimal    getMonto()                { return monto; }
+    public void          setMonto(BigDecimal monto) { this.monto = monto; }
 
     public String        getReferenciaPago()                       { return referenciaPago; }
     public void          setReferenciaPago(String referenciaPago)  { this.referenciaPago = referenciaPago; }
