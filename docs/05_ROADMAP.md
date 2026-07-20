@@ -299,11 +299,18 @@ Crear la base común para Servlets.
 
 ## Criterios de aceptación
 
-- [ ] Convenciones definidas.
-- [ ] Filtros compilan.
-- [ ] Errores no exponen información.
-- [ ] Las rutas son coherentes.
-- [ ] Existe una prueba de integración.
+- [x] Convenciones definidas.
+- [x] Filtros compilan.
+- [x] Errores no exponen información.
+- [x] Las rutas son coherentes.
+- [x] Existe una prueba de integración.
+
+**Cierre:** Fase 7 completada mediante 7A y 7B. La infraestructura pública usa
+`/inicio`, `/productos`, UTF-8, manejo central de errores, JSP y lectura real
+por DAO. JSON, DTO y Services no fueron necesarios para estos dos GET; los
+filtros de sesión y autorización se ejecutarán con autenticación y seguridad
+en Fase 8. Evidencia: `docs/auditorias/INFORME_FASE7A.md` e
+`INFORME_FASE7B.md`.
 
 ---
 
