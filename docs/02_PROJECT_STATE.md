@@ -267,16 +267,16 @@ FASE 4 CERRADA; FASE 5 CERRADA; BIGDECIMAL VALIDADO
   `PreparedStatement` y `try-with-resources`; los recursos JDBC y los mapeos
   fueron contrastados contra `database/cava.sql` y los 15 Models. Detalle:
   `docs/auditorias/INFORME_FASE6A.md`.
-- [ ] CRUD real probado.
-- [ ] Errores diferenciados.
-- [ ] Transacciones definidas.
+- [x] CRUD real probado.
+- [x] Errores diferenciados.
+- [x] Transacciones definidas.
 - [ ] No hay SQL fuera de DAO.
 
 Estado actual:
 
 ```text
-COMPILACION VALIDADA; FASE 6A (AUDITORIA Y PLANIFICACION) CERRADA;
-FASE 6B (CORRECCION Y PRUEBAS) NO INICIADA
+COMPILACION Y PRUEBAS VALIDADAS; FASE 6 (6A Y 6B) CERRADA;
+FASE 7 NO INICIADA
 ```
 
 ---
@@ -296,6 +296,15 @@ El detalle de la matriz, los 36 `SELECT *`, decisiones de eliminacion,
 excepciones, transacciones y el plan de 6B se conserva en
 `docs/auditorias/INFORME_FASE6A.md`. No se modificaron DAO, Models, SQL,
 migraciones, servicios ni configuracion durante 6A.
+
+## 9.2 Cierre de Fase 6B
+
+La Fase 6B - correccion y pruebas de los 15 DAO - queda **CERRADA** en la
+rama local `feature/fase-6b-correccion-dao`. Las pruebas pasaron por la
+infraestructura real `Conexion.getConn()` -> `jdbc/CavaDS` -> `CavaPool` con
+rollback de la unidad pedido y conteo final de cero registros en las 15 tablas.
+El detalle de decisiones, pruebas y limites esta en
+`docs/auditorias/INFORME_FASE6B.md`. Fase 7 permanece **NO INICIADA**.
 
 ## 10. Decisiones pendientes
 

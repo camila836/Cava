@@ -264,12 +264,16 @@ Validar la capa de persistencia entidad por entidad.
 
 ## Criterios de aceptación
 
-- [ ] Los 15 DAO compilan.
-- [ ] Todos usan `Conexion.getConn()`.
+- [x] Los 15 DAO compilan.
+- [x] Todos usan `Conexion.getConn()`.
 - [ ] No hay SQL duplicado sin razón.
-- [ ] No hay fugas.
-- [ ] Los CRUD fueron probados.
-- [ ] Los errores se distinguen.
+- [x] No hay fugas.
+- [x] Los CRUD fueron probados.
+- [x] Los errores se distinguen.
+
+**Cierre 20 de julio de 2026:** Fase 6 cerrada con 15 DAO corregidos,
+pruebas unitarias e integradas por `jdbc/CavaDS`, rollback confirmado y sin
+cambios de esquema. Evidencia: `docs/auditorias/INFORME_FASE6B.md`.
 
 ---
 
