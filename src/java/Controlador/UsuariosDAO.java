@@ -1,154 +1,33 @@
 package Controlador;
 
 import Conexion.Conexion;
+import Controlador.excepciones.SQLExceptionTranslator;
 import Modelo.Usuarios;
-
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO de acceso a datos para la tabla "usuarios".
- * Usa PreparedStatement y try-with-resources sobre Conexion.getConn().
- */
+/** DAO de usuarios; eliminar aplica baja logica con el campo isActivo existente. */
 public class UsuariosDAO {
-
-    public boolean insertar(Usuarios modelo) {
-        String sql = "INSERT INTO usuarios (nombres, apellidos, identificacion, correo, direccion, telefono, clave, isActivo, fechaNacimiento, fechaVencimientoClave, autorizacionTratamientoDatos, idRoles, idTipoDocumento, idCiudades) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, modelo.getNombres());
-            ps.setString(2, modelo.getApellidos());
-            ps.setString(3, modelo.getIdentificacion());
-            ps.setString(4, modelo.getCorreo());
-            ps.setString(5, modelo.getDireccion());
-            ps.setString(6, modelo.getTelefono());
-            ps.setString(7, modelo.getClave());
-            ps.setBoolean(8, modelo.isActivo());
-            ps.setDate(9, modelo.getFechaNacimiento() != null ? java.sql.Date.valueOf(modelo.getFechaNacimiento()) : null);
-            ps.setDate(10, modelo.getFechaVencimientoClave() != null ? java.sql.Date.valueOf(modelo.getFechaVencimientoClave()) : null);
-            ps.setBoolean(11, modelo.isAutorizacionTratamientoDatos());
-            ps.setInt(12, modelo.getIdRoles());
-            ps.setInt(13, modelo.getIdTipoDocumento());
-            ps.setInt(14, modelo.getIdCiudades());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al insertar en usuarios: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean actualizar(Usuarios modelo) {
-        String sql = "UPDATE usuarios SET nombres = ?, apellidos = ?, identificacion = ?, correo = ?, direccion = ?, telefono = ?, clave = ?, isActivo = ?, fechaNacimiento = ?, fechaVencimientoClave = ?, autorizacionTratamientoDatos = ?, idRoles = ?, idTipoDocumento = ?, idCiudades = ? WHERE idUsuarios = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, modelo.getNombres());
-            ps.setString(2, modelo.getApellidos());
-            ps.setString(3, modelo.getIdentificacion());
-            ps.setString(4, modelo.getCorreo());
-            ps.setString(5, modelo.getDireccion());
-            ps.setString(6, modelo.getTelefono());
-            ps.setString(7, modelo.getClave());
-            ps.setBoolean(8, modelo.isActivo());
-            ps.setDate(9, modelo.getFechaNacimiento() != null ? java.sql.Date.valueOf(modelo.getFechaNacimiento()) : null);
-            ps.setDate(10, modelo.getFechaVencimientoClave() != null ? java.sql.Date.valueOf(modelo.getFechaVencimientoClave()) : null);
-            ps.setBoolean(11, modelo.isAutorizacionTratamientoDatos());
-            ps.setInt(12, modelo.getIdRoles());
-            ps.setInt(13, modelo.getIdTipoDocumento());
-            ps.setInt(14, modelo.getIdCiudades());
-            ps.setInt(15, modelo.getIdUsuarios());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar en usuarios: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean eliminar(int idUsuarios) {
-        String sql = "DELETE FROM usuarios WHERE idUsuarios = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idUsuarios);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al eliminar en usuarios: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public Usuarios consultarPorId(int idUsuarios) {
-        String sql = "SELECT * FROM usuarios WHERE idUsuarios = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idUsuarios);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapear(rs);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al consultar usuarios por id: " + e.getMessage());
-        }
-        return null;
-    }
-
-    public List<Usuarios> listarTodos() {
-        List<Usuarios> lista = new ArrayList<>();
-        String sql = "SELECT * FROM usuarios";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lista.add(mapear(rs));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al listar usuarios: " + e.getMessage());
-        }
-        return lista;
-    }
-
-    /**
-     * Consulta específica requerida por el flujo de login (Fase 3 - Autenticación).
-     * El correo es UNIQUE en la tabla usuarios, por eso retorna un único registro.
-     */
-    public Usuarios buscarPorCorreo(String correo) {
-        String sql = "SELECT * FROM usuarios WHERE correo = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, correo);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapear(rs);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al buscar usuario por correo: " + e.getMessage());
-        }
-        return null;
-    }
-
-    private Usuarios mapear(ResultSet rs) throws SQLException {
-        Usuarios modelo = new Usuarios();
-        modelo.setIdUsuarios(rs.getInt("idUsuarios"));
-        modelo.setNombres(rs.getString("nombres"));
-        modelo.setApellidos(rs.getString("apellidos"));
-        modelo.setIdentificacion(rs.getString("identificacion"));
-        modelo.setCorreo(rs.getString("correo"));
-        modelo.setDireccion(rs.getString("direccion"));
-        modelo.setTelefono(rs.getString("telefono"));
-        modelo.setClave(rs.getString("clave"));
-        modelo.setIsActivo(rs.getBoolean("isActivo"));
-        modelo.setFechaNacimiento((rs.getDate("fechaNacimiento") != null ? rs.getDate("fechaNacimiento").toLocalDate() : null));
-        modelo.setFechaVencimientoClave((rs.getDate("fechaVencimientoClave") != null ? rs.getDate("fechaVencimientoClave").toLocalDate() : null));
-        modelo.setAutorizacionTratamientoDatos(rs.getBoolean("autorizacionTratamientoDatos"));
-        modelo.setIdRoles(rs.getInt("idRoles"));
-        modelo.setIdTipoDocumento(rs.getInt("idTipoDocumento"));
-        modelo.setIdCiudades(rs.getInt("idCiudades"));
-        return modelo;
-    }
+    private static final String COLUMNS="idUsuarios, nombres, apellidos, identificacion, correo, direccion, telefono, clave, isActivo, fechaNacimiento, fechaVencimientoClave, autorizacionTratamientoDatos, idRoles, idTipoDocumento, idCiudades";
+    private static final String INSERT="INSERT INTO usuarios (nombres, apellidos, identificacion, correo, direccion, telefono, clave, isActivo, fechaNacimiento, fechaVencimientoClave, autorizacionTratamientoDatos, idRoles, idTipoDocumento, idCiudades) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE="UPDATE usuarios SET nombres=?, apellidos=?, identificacion=?, correo=?, direccion=?, telefono=?, clave=?, isActivo=?, fechaNacimiento=?, fechaVencimientoClave=?, autorizacionTratamientoDatos=?, idRoles=?, idTipoDocumento=?, idCiudades=? WHERE idUsuarios=?";
+    private static final String DEACTIVATE="UPDATE usuarios SET isActivo = FALSE WHERE idUsuarios = ? AND isActivo = TRUE";
+    private static final String SELECT_BY_ID="SELECT "+COLUMNS+" FROM usuarios WHERE idUsuarios = ?";
+    private static final String SELECT_ALL="SELECT "+COLUMNS+" FROM usuarios";
+    private static final String SELECT_BY_EMAIL="SELECT "+COLUMNS+" FROM usuarios WHERE correo = ?";
+    public boolean insertar(Usuarios m){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(INSERT,Statement.RETURN_GENERATED_KEYS)){parametros(ps,m);SQLExceptionTranslator.requireAffected(ps.executeUpdate(),"Usuarios.insertar");id(ps,m);return true;}catch(SQLException e){throw SQLExceptionTranslator.translate("Usuarios.insertar",e);}}
+    public boolean actualizar(Usuarios m){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(UPDATE)){parametros(ps,m);ps.setInt(15,m.getIdUsuarios());SQLExceptionTranslator.requireAffected(ps.executeUpdate(),"Usuarios.actualizar");return true;}catch(SQLException e){throw SQLExceptionTranslator.translate("Usuarios.actualizar",e);}}
+    public boolean eliminar(int id){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(DEACTIVATE)){ps.setInt(1,id);SQLExceptionTranslator.requireAffected(ps.executeUpdate(),"Usuarios.eliminar");return true;}catch(SQLException e){throw SQLExceptionTranslator.translate("Usuarios.eliminar",e);}}
+    public Usuarios consultarPorId(int id){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(SELECT_BY_ID)){ps.setInt(1,id);try(ResultSet rs=ps.executeQuery()){return rs.next()?mapear(rs):null;}}catch(SQLException e){throw SQLExceptionTranslator.translate("Usuarios.consultarPorId",e);}}
+    public List<Usuarios> listarTodos(){List<Usuarios> l=new ArrayList<>();try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(SELECT_ALL);ResultSet rs=ps.executeQuery()){while(rs.next())l.add(mapear(rs));return l;}catch(SQLException e){throw SQLExceptionTranslator.translate("Usuarios.listarTodos",e);}}
+    public Usuarios buscarPorCorreo(String correo){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(SELECT_BY_EMAIL)){ps.setString(1,correo);try(ResultSet rs=ps.executeQuery()){return rs.next()?mapear(rs):null;}}catch(SQLException e){throw SQLExceptionTranslator.translate("Usuarios.buscarPorCorreo",e);}}
+    private void parametros(PreparedStatement ps,Usuarios m)throws SQLException{ps.setString(1,m.getNombres());ps.setString(2,m.getApellidos());ps.setString(3,m.getIdentificacion());ps.setString(4,m.getCorreo());ps.setString(5,m.getDireccion());ps.setString(6,m.getTelefono());ps.setString(7,m.getClave());ps.setBoolean(8,m.isActivo());ps.setDate(9,m.getFechaNacimiento()==null?null:Date.valueOf(m.getFechaNacimiento()));ps.setDate(10,m.getFechaVencimientoClave()==null?null:Date.valueOf(m.getFechaVencimientoClave()));ps.setBoolean(11,m.isAutorizacionTratamientoDatos());ps.setInt(12,m.getIdRoles());ps.setInt(13,m.getIdTipoDocumento());ps.setInt(14,m.getIdCiudades());}
+    private void id(PreparedStatement ps,Usuarios m)throws SQLException{try(ResultSet k=ps.getGeneratedKeys()){if(k.next())m.setIdUsuarios(k.getInt(1));}}
+    private Usuarios mapear(ResultSet rs)throws SQLException{Usuarios m=new Usuarios();m.setIdUsuarios(rs.getInt("idUsuarios"));m.setNombres(rs.getString("nombres"));m.setApellidos(rs.getString("apellidos"));m.setIdentificacion(rs.getString("identificacion"));m.setCorreo(rs.getString("correo"));m.setDireccion(rs.getString("direccion"));m.setTelefono(rs.getString("telefono"));m.setClave(rs.getString("clave"));m.setIsActivo(rs.getBoolean("isActivo"));Date nacimiento=rs.getDate("fechaNacimiento");m.setFechaNacimiento(nacimiento==null?null:nacimiento.toLocalDate());Date vencimiento=rs.getDate("fechaVencimientoClave");m.setFechaVencimientoClave(vencimiento==null?null:vencimiento.toLocalDate());m.setAutorizacionTratamientoDatos(rs.getBoolean("autorizacionTratamientoDatos"));m.setIdRoles(rs.getInt("idRoles"));m.setIdTipoDocumento(rs.getInt("idTipoDocumento"));m.setIdCiudades(rs.getInt("idCiudades"));return m;}
 }

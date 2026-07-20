@@ -1,95 +1,55 @@
 package Controlador;
 
 import Conexion.Conexion;
+import Controlador.excepciones.SQLExceptionTranslator;
 import Modelo.Roles;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO de acceso a datos para la tabla "roles".
- * Usa PreparedStatement y try-with-resources sobre Conexion.getConn().
- */
+/** DAO de la tabla roles. */
 public class RolesDAO {
+    private static final String COLUMNS = "idRoles, descripcionRol";
+    private static final String INSERT = "INSERT INTO roles (descripcionRol) VALUES (?)";
+    private static final String UPDATE = "UPDATE roles SET descripcionRol = ? WHERE idRoles = ?";
+    private static final String DELETE = "DELETE FROM roles WHERE idRoles = ?";
+    private static final String SELECT_BY_ID = "SELECT " + COLUMNS + " FROM roles WHERE idRoles = ?";
+    private static final String SELECT_ALL = "SELECT " + COLUMNS + " FROM roles";
 
     public boolean insertar(Roles modelo) {
-        String sql = "INSERT INTO roles (descripcionRol) VALUES (?)";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.getConn(); PreparedStatement ps = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, modelo.getDescripcionRol());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al insertar en roles: " + e.getMessage());
-            return false;
-        }
+            SQLExceptionTranslator.requireAffected(ps.executeUpdate(), "Roles.insertar");
+            asignarIdGenerado(ps, modelo);
+            return true;
+        } catch (SQLException e) { throw SQLExceptionTranslator.translate("Roles.insertar", e); }
     }
-
     public boolean actualizar(Roles modelo) {
-        String sql = "UPDATE roles SET descripcionRol = ? WHERE idRoles = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, modelo.getDescripcionRol());
-            ps.setInt(2, modelo.getIdRoles());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar en roles: " + e.getMessage());
-            return false;
-        }
+        try (Connection conn = Conexion.getConn(); PreparedStatement ps = conn.prepareStatement(UPDATE)) {
+            ps.setString(1, modelo.getDescripcionRol()); ps.setInt(2, modelo.getIdRoles());
+            SQLExceptionTranslator.requireAffected(ps.executeUpdate(), "Roles.actualizar"); return true;
+        } catch (SQLException e) { throw SQLExceptionTranslator.translate("Roles.actualizar", e); }
     }
-
     public boolean eliminar(int idRoles) {
-        String sql = "DELETE FROM roles WHERE idRoles = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idRoles);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al eliminar en roles: " + e.getMessage());
-            return false;
-        }
+        try (Connection conn = Conexion.getConn(); PreparedStatement ps = conn.prepareStatement(DELETE)) {
+            ps.setInt(1, idRoles); SQLExceptionTranslator.requireAffected(ps.executeUpdate(), "Roles.eliminar"); return true;
+        } catch (SQLException e) { throw SQLExceptionTranslator.translate("Roles.eliminar", e); }
     }
-
     public Roles consultarPorId(int idRoles) {
-        String sql = "SELECT * FROM roles WHERE idRoles = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idRoles);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapear(rs);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al consultar roles por id: " + e.getMessage());
-        }
-        return null;
+        try (Connection conn = Conexion.getConn(); PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
+            ps.setInt(1, idRoles); try (ResultSet rs = ps.executeQuery()) { return rs.next() ? mapear(rs) : null; }
+        } catch (SQLException e) { throw SQLExceptionTranslator.translate("Roles.consultarPorId", e); }
     }
-
     public List<Roles> listarTodos() {
         List<Roles> lista = new ArrayList<>();
-        String sql = "SELECT * FROM roles";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lista.add(mapear(rs));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al listar roles: " + e.getMessage());
-        }
-        return lista;
+        try (Connection conn = Conexion.getConn(); PreparedStatement ps = conn.prepareStatement(SELECT_ALL); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) lista.add(mapear(rs)); return lista;
+        } catch (SQLException e) { throw SQLExceptionTranslator.translate("Roles.listarTodos", e); }
     }
-
-    private Roles mapear(ResultSet rs) throws SQLException {
-        Roles modelo = new Roles();
-        modelo.setIdRoles(rs.getInt("idRoles"));
-        modelo.setDescripcionRol(rs.getString("descripcionRol"));
-        return modelo;
-    }
+    private void asignarIdGenerado(PreparedStatement ps, Roles modelo) throws SQLException { try (ResultSet keys = ps.getGeneratedKeys()) { if (keys.next()) modelo.setIdRoles(keys.getInt(1)); } }
+    private Roles mapear(ResultSet rs) throws SQLException { Roles m = new Roles(); m.setIdRoles(rs.getInt("idRoles")); m.setDescripcionRol(rs.getString("descripcionRol")); return m; }
 }

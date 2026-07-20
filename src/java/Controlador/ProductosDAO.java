@@ -1,104 +1,29 @@
 package Controlador;
 
 import Conexion.Conexion;
+import Controlador.excepciones.SQLExceptionTranslator;
 import Modelo.Productos;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO de acceso a datos para la tabla "productos".
- * Usa PreparedStatement y try-with-resources sobre Conexion.getConn().
- */
+/** DAO de productos; conserva las referencias y no permite borrado ordinario. */
 public class ProductosDAO {
-
-    public boolean insertar(Productos modelo) {
-        String sql = "INSERT INTO productos (descripcionProductos, precioProductos, idUnidadesMedida, idCategoriaProductos) VALUES (?, ?, ?, ?)";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, modelo.getDescripcionProductos());
-            ps.setBigDecimal(2, modelo.getPrecioProductos());
-            ps.setInt(3, modelo.getIdUnidadesMedida());
-            ps.setInt(4, modelo.getIdCategoriaProductos());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al insertar en productos: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean actualizar(Productos modelo) {
-        String sql = "UPDATE productos SET descripcionProductos = ?, precioProductos = ?, idUnidadesMedida = ?, idCategoriaProductos = ? WHERE idProductos = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, modelo.getDescripcionProductos());
-            ps.setBigDecimal(2, modelo.getPrecioProductos());
-            ps.setInt(3, modelo.getIdUnidadesMedida());
-            ps.setInt(4, modelo.getIdCategoriaProductos());
-            ps.setInt(5, modelo.getIdProductos());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar en productos: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean eliminar(int idProductos) {
-        String sql = "DELETE FROM productos WHERE idProductos = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idProductos);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al eliminar en productos: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public Productos consultarPorId(int idProductos) {
-        String sql = "SELECT * FROM productos WHERE idProductos = ?";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idProductos);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapear(rs);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al consultar productos por id: " + e.getMessage());
-        }
-        return null;
-    }
-
-    public List<Productos> listarTodos() {
-        List<Productos> lista = new ArrayList<>();
-        String sql = "SELECT * FROM productos";
-        try (Connection conn = Conexion.getConn();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lista.add(mapear(rs));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al listar productos: " + e.getMessage());
-        }
-        return lista;
-    }
-
-    private Productos mapear(ResultSet rs) throws SQLException {
-        Productos modelo = new Productos();
-        modelo.setIdProductos(rs.getInt("idProductos"));
-        modelo.setDescripcionProductos(rs.getString("descripcionProductos"));
-        modelo.setPrecioProductos(rs.getBigDecimal("precioProductos"));
-        modelo.setIdUnidadesMedida(rs.getInt("idUnidadesMedida"));
-        modelo.setIdCategoriaProductos(rs.getInt("idCategoriaProductos"));
-        return modelo;
-    }
+    private static final String COLUMNS="idProductos, descripcionProductos, precioProductos, idUnidadesMedida, idCategoriaProductos";
+    private static final String INSERT="INSERT INTO productos (descripcionProductos, precioProductos, idUnidadesMedida, idCategoriaProductos) VALUES (?, ?, ?, ?)";
+    private static final String UPDATE="UPDATE productos SET descripcionProductos=?, precioProductos=?, idUnidadesMedida=?, idCategoriaProductos=? WHERE idProductos=?";
+    private static final String SELECT_BY_ID="SELECT "+COLUMNS+" FROM productos WHERE idProductos = ?";
+    private static final String SELECT_ALL="SELECT "+COLUMNS+" FROM productos";
+    public boolean insertar(Productos m){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(INSERT,Statement.RETURN_GENERATED_KEYS)){parametros(ps,m);SQLExceptionTranslator.requireAffected(ps.executeUpdate(),"Productos.insertar");id(ps,m);return true;}catch(SQLException e){throw SQLExceptionTranslator.translate("Productos.insertar",e);}}
+    public boolean actualizar(Productos m){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(UPDATE)){parametros(ps,m);ps.setInt(5,m.getIdProductos());SQLExceptionTranslator.requireAffected(ps.executeUpdate(),"Productos.actualizar");return true;}catch(SQLException e){throw SQLExceptionTranslator.translate("Productos.actualizar",e);}}
+    public boolean eliminar(int idProductos){throw SQLExceptionTranslator.operationNotAllowed("Productos.eliminar");}
+    public Productos consultarPorId(int id){try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(SELECT_BY_ID)){ps.setInt(1,id);try(ResultSet rs=ps.executeQuery()){return rs.next()?mapear(rs):null;}}catch(SQLException e){throw SQLExceptionTranslator.translate("Productos.consultarPorId",e);}}
+    public List<Productos> listarTodos(){List<Productos> l=new ArrayList<>();try(Connection c=Conexion.getConn();PreparedStatement ps=c.prepareStatement(SELECT_ALL);ResultSet rs=ps.executeQuery()){while(rs.next())l.add(mapear(rs));return l;}catch(SQLException e){throw SQLExceptionTranslator.translate("Productos.listarTodos",e);}}
+    private void parametros(PreparedStatement ps,Productos m)throws SQLException{ps.setString(1,m.getDescripcionProductos());ps.setBigDecimal(2,m.getPrecioProductos());ps.setInt(3,m.getIdUnidadesMedida());ps.setInt(4,m.getIdCategoriaProductos());}
+    private void id(PreparedStatement ps,Productos m)throws SQLException{try(ResultSet k=ps.getGeneratedKeys()){if(k.next())m.setIdProductos(k.getInt(1));}}
+    private Productos mapear(ResultSet rs)throws SQLException{Productos m=new Productos();m.setIdProductos(rs.getInt("idProductos"));m.setDescripcionProductos(rs.getString("descripcionProductos"));m.setPrecioProductos(rs.getBigDecimal("precioProductos"));m.setIdUnidadesMedida(rs.getInt("idUnidadesMedida"));m.setIdCategoriaProductos(rs.getInt("idCategoriaProductos"));return m;}
 }
