@@ -2,14 +2,15 @@
 
 ## Estado
 
-Los scripts `00` a `03` constituyen el instalador consolidado de la primera
-versión. Crean las 15 tablas confirmadas en la Fase 4A y no incluyen datos
-empresariales inventados.
+`cava.sql` es la fuente canónica y autocontenida del esquema definitivo de la
+primera versión. Crea `cava` y sus 15 tablas, sin usuarios, credenciales ni
+datos empresariales inventados.
 
-`cava.sql` se conserva temporalmente como instantánea de compatibilidad del
-esquema anterior a la separación. No debe ejecutarse junto con `01_schema.sql`
-porque ambos describen las mismas 15 tablas. El instalador consolidado es la
-fuente preferida para instalaciones nuevas.
+Los scripts `00` a `03` son el instalador modular equivalente para operaciones
+que necesitan separar creación de base, estructura, índices y catálogos. No se
+debe ejecutar `cava.sql` junto con `01_schema.sql` en la misma base: ambos
+describen intencionalmente las mismas 15 tablas y fallan ante instalaciones
+parciales para no ocultar divergencias.
 
 ## Orden obligatorio
 
@@ -22,6 +23,10 @@ fuente preferida para instalaciones nuevas.
 5. `03_seed_catalogs.sql` — reserva las semillas; actualmente no ejecuta DML
    porque no existen valores empresariales autorizados.
 
+Todas las tablas fijan explícitamente `ENGINE=InnoDB`, `utf8mb4` y
+`utf8mb4_unicode_ci`. Las 14 relaciones usan `ON UPDATE RESTRICT` y
+`ON DELETE RESTRICT`; no existen cascadas destructivas en esta versión.
+
 Ejemplo conceptual, sin credenciales:
 
 ```powershell
@@ -31,9 +36,10 @@ mysql [opciones-locales-seguras] --database=cava < database\02_indexes.sql
 mysql [opciones-locales-seguras] --database=cava < database\03_seed_catalogs.sql
 ```
 
-`01_schema.sql` debe ejecutarse sobre una base nueva y vacía. Falla si detecta
-tablas existentes para no ocultar instalaciones parciales. `00` sí es
-idempotente: `CREATE DATABASE IF NOT EXISTS` es seguro para su único objetivo.
+`cava.sql` y `01_schema.sql` deben ejecutarse sobre una base nueva y vacía.
+Fallan si detectan tablas existentes para no ocultar instalaciones parciales.
+`00` sí es idempotente: `CREATE DATABASE IF NOT EXISTS` es seguro para su único
+objetivo.
 
 ## Validación aislada
 
