@@ -1,3 +1,7 @@
+-- CAVA - Esquema canónico definitivo.
+-- Reconstruye una instalación nueva de `cava` sin crear usuarios ni datos.
+-- Falla si encuentra tablas preexistentes para no ocultar estados parciales.
+
 CREATE DATABASE IF NOT EXISTS cava
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE cava;
@@ -7,29 +11,29 @@ USE cava;
 CREATE TABLE categoriaProductos (
     idCategoriaProductos     INT AUTO_INCREMENT PRIMARY KEY,
     descripcionCategoriaProductos VARCHAR(45) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE ciudades (
     idCiudades      INT AUTO_INCREMENT PRIMARY KEY,
     codigoCiudad    VARCHAR(45) NOT NULL,
     nombreCiudad    VARCHAR(45) NOT NULL,
     codigoPostal    VARCHAR(45)
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE tipoDocumento (
     idTipoDocumento INT AUTO_INCREMENT PRIMARY KEY,
     descripcion     VARCHAR(45) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE roles (
     idRoles         INT AUTO_INCREMENT PRIMARY KEY,
     descripcionRol  VARCHAR(45) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE unidadesMedida (
     idUnidadesMedida        INT AUTO_INCREMENT PRIMARY KEY,
     descripcionUnidadesMed  VARCHAR(45) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE transportadoras (
     idTransportadoras       INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,17 +41,17 @@ CREATE TABLE transportadoras (
     nit                     VARCHAR(45) NOT NULL,
     correo                  VARCHAR(45),
     telefono                VARCHAR(45)
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE estadoEnvio (
     idEstadoEnvio           INT AUTO_INCREMENT PRIMARY KEY,
     descripcionEstadoEnvio  VARCHAR(45) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE mediosPagos (
     idMediosPagos           INT AUTO_INCREMENT PRIMARY KEY,
     descripcionMediosPagos  VARCHAR(45) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 2. USUARIOS (depende de roles, tipoDocumento, ciudades)
 
@@ -67,10 +71,10 @@ CREATE TABLE usuarios (
     idRoles                         INT NOT NULL,
     idTipoDocumento                 INT NOT NULL,
     idCiudades                      INT NOT NULL,
-    CONSTRAINT fkUsuariosRoles         FOREIGN KEY (idRoles)         REFERENCES roles(idRoles),
-    CONSTRAINT fkUsuariosTipoDocumento FOREIGN KEY (idTipoDocumento) REFERENCES tipoDocumento(idTipoDocumento),
-    CONSTRAINT fkUsuariosCiudades      FOREIGN KEY (idCiudades)      REFERENCES ciudades(idCiudades)
-);
+    CONSTRAINT fkUsuariosRoles         FOREIGN KEY (idRoles)         REFERENCES roles(idRoles) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fkUsuariosTipoDocumento FOREIGN KEY (idTipoDocumento) REFERENCES tipoDocumento(idTipoDocumento) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fkUsuariosCiudades      FOREIGN KEY (idCiudades)      REFERENCES ciudades(idCiudades) ON UPDATE RESTRICT ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 3. PRODUCTOS (depende de unidadesMedida, categoriaProductos)
 
@@ -80,19 +84,19 @@ CREATE TABLE productos (
     precioProductos         DECIMAL(10,2) NOT NULL,
     idUnidadesMedida        INT NOT NULL,
     idCategoriaProductos    INT NOT NULL,
-    CONSTRAINT fkProductosUnidadesMedida     FOREIGN KEY (idUnidadesMedida)     REFERENCES unidadesMedida(idUnidadesMedida),
-    CONSTRAINT fkProductosCategoriaProductos FOREIGN KEY (idCategoriaProductos) REFERENCES categoriaProductos(idCategoriaProductos)
-);
+    CONSTRAINT fkProductosUnidadesMedida     FOREIGN KEY (idUnidadesMedida)     REFERENCES unidadesMedida(idUnidadesMedida) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fkProductosCategoriaProductos FOREIGN KEY (idCategoriaProductos) REFERENCES categoriaProductos(idCategoriaProductos) ON UPDATE RESTRICT ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 4. INVENTARIO (depende de productos)
 
 CREATE TABLE inventario (
     idInventario            INT AUTO_INCREMENT PRIMARY KEY,
     descripcionInventario   VARCHAR(45),
-    stock                   DECIMAL(10,2) NOT NULL DEFAULT 0,
+    stock                   DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     idProductos             INT NOT NULL,
-    CONSTRAINT fkInventarioProductos FOREIGN KEY (idProductos) REFERENCES productos(idProductos)
-);
+    CONSTRAINT fkInventarioProductos FOREIGN KEY (idProductos) REFERENCES productos(idProductos) ON UPDATE RESTRICT ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 5. PEDIDOS CABEZA (depende de usuarios)
 
@@ -103,8 +107,8 @@ CREATE TABLE pedidosCabeza (
     descripcionPedido   VARCHAR(45),
     valorTotal          DECIMAL(10,2) NOT NULL,
     idUsuarios          INT NOT NULL,
-    CONSTRAINT fkPedidosCabezaUsuarios FOREIGN KEY (idUsuarios) REFERENCES usuarios(idUsuarios)
-);
+    CONSTRAINT fkPedidosCabezaUsuarios FOREIGN KEY (idUsuarios) REFERENCES usuarios(idUsuarios) ON UPDATE RESTRICT ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 6. PEDIDOS DETALLE (depende de pedidosCabeza, productos)
 
@@ -114,9 +118,9 @@ CREATE TABLE pedidosDetalle (
     subtotalPed         DECIMAL(10,2) NOT NULL,
     idPedidosCabeza     INT NOT NULL,
     idProductos         INT NOT NULL,
-    CONSTRAINT fkPedidosDetallePedidosCabeza FOREIGN KEY (idPedidosCabeza) REFERENCES pedidosCabeza(idPedidosCabeza),
-    CONSTRAINT fkPedidosDetalleProductos      FOREIGN KEY (idProductos)     REFERENCES productos(idProductos)
-);
+    CONSTRAINT fkPedidosDetallePedidosCabeza FOREIGN KEY (idPedidosCabeza) REFERENCES pedidosCabeza(idPedidosCabeza) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fkPedidosDetalleProductos      FOREIGN KEY (idProductos)     REFERENCES productos(idProductos) ON UPDATE RESTRICT ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 7. PAGOS (depende de mediosPagos, pedidosCabeza)
 
@@ -129,9 +133,9 @@ CREATE TABLE pagos (
     comprobantePago     VARCHAR(45),
     idMediosPagos       INT NOT NULL,
     idPedidosCabeza     INT NOT NULL,
-    CONSTRAINT fkPagosMediosPagos   FOREIGN KEY (idMediosPagos)   REFERENCES mediosPagos(idMediosPagos),
-    CONSTRAINT fkPagosPedidosCabeza FOREIGN KEY (idPedidosCabeza) REFERENCES pedidosCabeza(idPedidosCabeza)
-);
+    CONSTRAINT fkPagosMediosPagos   FOREIGN KEY (idMediosPagos)   REFERENCES mediosPagos(idMediosPagos) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fkPagosPedidosCabeza FOREIGN KEY (idPedidosCabeza) REFERENCES pedidosCabeza(idPedidosCabeza) ON UPDATE RESTRICT ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 8. ENVIOS (depende de pedidosCabeza, estadoEnvio, transportadoras)
 
@@ -143,7 +147,7 @@ CREATE TABLE envios (
     idPedidosCabeza     INT NOT NULL,
     idEstadoEnvio       INT NOT NULL,
     idTransportadoras   INT NOT NULL,
-    CONSTRAINT fkEnviosPedidosCabeza   FOREIGN KEY (idPedidosCabeza)   REFERENCES pedidosCabeza(idPedidosCabeza),
-    CONSTRAINT fkEnviosEstadoEnvio     FOREIGN KEY (idEstadoEnvio)     REFERENCES estadoEnvio(idEstadoEnvio),
-    CONSTRAINT fkEnviosTransportadoras FOREIGN KEY (idTransportadoras) REFERENCES transportadoras(idTransportadoras)
-);
+    CONSTRAINT fkEnviosPedidosCabeza   FOREIGN KEY (idPedidosCabeza)   REFERENCES pedidosCabeza(idPedidosCabeza) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fkEnviosEstadoEnvio     FOREIGN KEY (idEstadoEnvio)     REFERENCES estadoEnvio(idEstadoEnvio) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fkEnviosTransportadoras FOREIGN KEY (idTransportadoras) REFERENCES transportadoras(idTransportadoras) ON UPDATE RESTRICT ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
