@@ -3,8 +3,8 @@
 ## Estado
 
 `cava.sql` es la fuente canónica y autocontenida del esquema definitivo de la
-primera versión. Crea `cava` y sus 15 tablas, sin usuarios, credenciales ni
-datos empresariales inventados.
+primera versión. Crea `cava`, sus 15 tablas y únicamente los roles
+autoritativos `CLIENTE` y `ADMINISTRADOR`; no crea usuarios ni credenciales.
 
 Los scripts `00` a `03` son el instalador modular equivalente para operaciones
 que necesitan separar creación de base, estructura, índices y catálogos. No se
@@ -20,8 +20,8 @@ parciales para no ocultar divergencias.
 3. `01_schema.sql` — crea las 15 tablas, PK, FK, UNIQUE, tipos y defaults.
 4. `02_indexes.sql` — reserva los índices de negocio; actualmente no ejecuta
    DDL porque no existen índices adicionales autorizados.
-5. `03_seed_catalogs.sql` — reserva las semillas; actualmente no ejecuta DML
-   porque no existen valores empresariales autorizados.
+5. `03_seed_catalogs.sql` — inserta idempotentemente `CLIENTE` y
+   `ADMINISTRADOR` por `codigoRol`; no contiene otros catálogos ni usuarios.
 
 Todas las tablas fijan explícitamente `ENGINE=InnoDB`, `utf8mb4` y
 `utf8mb4_unicode_ci`. Las 14 relaciones usan `ON UPDATE RESTRICT` y
@@ -46,16 +46,26 @@ objetivo.
 La instalación debe probarse primero sobre una base temporal única. Para ello,
 se define `@cava_database_name` antes de cargar `00_create_database.sql` en la
 misma sesión; después se ejecutan `01` a `03` seleccionando esa base. La
-validación debe comparar `information_schema`, verificar 15 tablas y confirmar
-0 filas cuando no haya semillas autorizadas.
+validación debe comparar `information_schema`, verificar 15 tablas, exactamente
+dos roles autorizados y cero usuarios. Las semillas deben ejecutarse dos veces
+sin alterar el conteo.
 
 No se debe ejecutar DDL o DML sobre la base real `cava` sin respaldo,
 validación temporal satisfactoria y autorización explícita.
 
+## Actualización de Fase 8
+
+`migrations/F008__autenticacion_base.sql` actualiza una instalación existente:
+añade `roles.codigoRol`, habilita los campos opcionales de perfil, sustituye la
+unicidad individual de identificación por
+`uqUsuariosTipoDocumentoIdentificacion`, añade
+`chkUsuariosDocumentoCompleto` y crea únicamente los dos roles autorizados.
+Debe ejecutarse con respaldo previo y validación aislada.
+
 ## Migraciones futuras
 
-`migrations/` contiene propuestas ordenadas para Fase 12. No pertenecen a la
-instalación de la primera versión y no deben ejecutarse durante Fase 4B:
+Las migraciones `V001`–`V004` siguen reservadas para Fase 12 y no fueron
+editadas, renumeradas ni ejecutadas durante Fase 8:
 
 1. `V001__favoritos.sql`.
 2. `V002__puntos_usuario.sql`.

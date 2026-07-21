@@ -85,9 +85,11 @@ La Fase 4 definió:
 1. las 15 tablas actuales pertenecen a la primera versión;
 2. el instalador oficial usa `00_create_database.sql` a
    `03_seed_catalogs.sql`;
-3. las migraciones V001–V004 son futuras y no se ejecutan en la instalación;
-4. el orden obligatorio está en `database/README.md`;
-5. no existen todavía valores de catálogo autorizados.
+3. `F008__autenticacion_base.sql` es la actualización aplicada para Fase 8;
+4. las migraciones V001–V004 son futuras y no se ejecutan en la instalación;
+5. el orden obligatorio está en `database/README.md`;
+6. los únicos valores de catálogo autorizados son los roles `CLIENTE` y
+   `ADMINISTRADOR`; no existen semillas de usuarios, documentos o ciudades.
 
 ---
 
@@ -102,6 +104,7 @@ database/
 ├── 02_indexes.sql
 ├── 03_seed_catalogs.sql
 ├── migrations/
+│   ├── F008__autenticacion_base.sql
 │   ├── V001__favoritos.sql
 │   ├── V002__puntos_usuario.sql
 │   ├── V003__resenas.sql
@@ -605,6 +608,21 @@ La matriz debe cubrir todas las entidades.
 
 ---
 
+## 20.1 Fase 8 — autenticación base
+
+- `roles.codigoRol VARCHAR(30) NOT NULL` es la clave natural y tiene la
+  restricción `uqRolesCodigoRol`.
+- Los roles autorizados e idempotentes son `CLIENTE` y `ADMINISTRADOR`; sus ID
+  autoincrementales no forman parte del contrato de aplicación.
+- `usuarios.identificacion`, `idTipoDocumento` e `idCiudades` aceptan `NULL`.
+- `idRoles`, `correo`, `clave` e `isActivo` continúan obligatorios; `clave`
+  conserva `VARCHAR(255)`.
+- `uqUsuariosTipoDocumentoIdentificacion` garantiza unicidad por tipo y
+  `chkUsuariosDocumentoCompleto` exige tipo e identificación juntos o ambos
+  ausentes.
+- La migración de una instalación existente y una instalación nueva fueron
+  comparadas por columnas e índices en bases temporales aisladas.
+
 ## 21. Criterios de aceptación
 
 La base se considera estable cuando:
@@ -612,13 +630,14 @@ La base se considera estable cuando:
 - [x] Existe un instalador inicial oficial separado en `00`–`03`.
 - [x] Las migraciones tienen orden V001–V004 y están aplazadas.
 - [x] Todas las tablas se crean desde cero.
-- [x] No hay scripts contradictorios; `cava.sql` coincide con `01_schema.sql`.
+- [x] La estructura de `cava.sql` coincide con `01_schema.sql` y las semillas
+  de roles coinciden con `03_seed_catalogs.sql`.
 - [x] Las claves foráneas y sus reglas fueron validadas.
 - [x] Los índices principales existen.
 - [x] Los tipos del esquema consolidado coinciden con los 15 Models.
 - [x] Dinero y cantidades exactas usan `DECIMAL(10,2)` y `BigDecimal`.
-- [x] Los datos iniciales son reproducibles: no existen valores autorizados y
-  el script reservado no ejecuta DML.
+- [x] Los datos iniciales son reproducibles: existen únicamente los roles
+  `CLIENTE` y `ADMINISTRADOR`, sembrados idempotentemente por `codigoRol`.
 - [x] Los 15 DAO usan nombres reales, confirmado en Fase 4A.
 - [x] Las pruebas de instalación temporal fueron ejecutadas.
 - [x] La documentación fue actualizada.

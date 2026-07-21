@@ -338,13 +338,19 @@ Implementar registro, login, sesión y permisos.
 
 ## Criterios de aceptación
 
-- [ ] Registro funciona.
-- [ ] Contraseña no se guarda en texto plano.
-- [ ] Login funciona.
-- [ ] Logout invalida sesión.
-- [ ] Usuario no autorizado es bloqueado.
-- [ ] Admin está protegido.
-- [ ] No se filtra información sensible.
+- [x] Registro funciona.
+- [x] Contraseña no se guarda en texto plano.
+- [x] Login funciona.
+- [x] Logout invalida sesión.
+- [x] Usuario no autorizado es bloqueado.
+- [x] Admin está protegido.
+- [x] No se filtra información sensible.
+
+**Cierre:** Fase 8 completada en desarrollo local. Usa roles por `codigoRol`,
+PBKDF2WithHmacSHA256, sesión renovada, CSRF y autorización de `/admin`. El rate
+limiting permanece como riesgo aceptado solo en desarrollo y es bloqueo
+obligatorio antes de exposición pública o producción. Evidencia:
+`docs/auditorias/INFORME_FASE8.md`. Fase 9 permanece no iniciada.
 
 ---
 

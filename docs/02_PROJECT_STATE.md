@@ -169,8 +169,8 @@ recompiló el proyecto durante esta limpieza posterior.
 | Models | Fase 5 cerrada; 15 Models contrastados y seis atributos decimales migrados a `BigDecimal` |
 | DAO | Los 15 compilan; requieren auditoría funcional y pruebas de persistencia |
 | Servlets | Fase 7 cerrada: `/inicio` y `/productos` implementados y validados |
-| Autenticación | No implementada |
-| Seguridad | No implementada |
+| Autenticación | Fase 8 cerrada: registro mínimo, PBKDF2, login, sesión y logout validados |
+| Seguridad | Fase 8 cerrada en desarrollo local: CSRF, renovación de sesión, cookies y autorización admin; rate limiting pendiente obligatorio antes de exposición pública |
 | Dashboard real | No implementado |
 | Tienda conectada | Listado público de productos conectado en solo lectura; experiencia completa pendiente de Fase 11 |
 | Pruebas | Fase 7 validó unidades, JSP, WAR, JNDI de lectura y contratos HTTP públicos |
@@ -280,7 +280,7 @@ Estado actual:
 
 ```text
 COMPILACION Y PRUEBAS VALIDADAS; FASE 6 (6A Y 6B) CERRADA;
-FASE 7 (7A Y 7B) CERRADA; FASE 8 NO INICIADA
+FASE 7 (7A Y 7B) CERRADA; FASE 8 CERRADA; FASE 9 NO INICIADA
 ```
 
 ---
@@ -336,7 +336,26 @@ El detalle esta en `docs/auditorias/INFORME_FASE7B.md`.
   errores`, `test(web): validar servlets y contratos http` y
   `docs(web): cerrar fase 7`.
 - No se realizo push ni se abrio PR.
-- Fase 8 permanece **NO INICIADA**.
+- Fase 8 se cerró posteriormente; ver sección 9.5.
+
+## 9.5 Cierre de Fase 8
+
+La Fase 8 — Autenticación y seguridad queda **CERRADA** en la rama local
+`feature/fase-8-usuarios-autenticacion`. El registro solicita solo nombres,
+apellidos, correo, contraseña, confirmación y consentimiento. Los campos de
+perfil permanecen opcionales y sin catálogos inventados.
+
+Se aplicó `F008__autenticacion_base.sql` después de un respaldo externo y de
+validar migración e instalación nueva en bases aisladas. La base real conserva
+15 tablas, dos roles autoritativos y cero usuarios al cierre. Registro, login,
+renovación de ID, logout, CSRF, cookies y autorización `/admin` fueron
+verificados en GlassFish mediante HTTP real. La evidencia completa está en
+`docs/auditorias/INFORME_FASE8.md`.
+
+La autenticación todavía no limita intentos fallidos. Existe riesgo de fuerza
+bruta mientras CAVA permanezca sin rate limiting. Este control debe
+implementarse y probarse antes de cualquier exposición pública o paso a
+producción. El riesgo se acepta temporalmente solo para desarrollo local.
 
 ## 10. Decisiones pendientes
 
@@ -345,8 +364,8 @@ El detalle esta en `docs/auditorias/INFORME_FASE7B.md`.
 - Usuario MySQL de desarrollo.
 - Estrategia de excepciones.
 - Librería de logging.
-- Algoritmo de hash.
-- Estrategia CSRF.
+- ~~Algoritmo de hash.~~ Resuelto en Fase 8 con PBKDF2WithHmacSHA256, 600.000 iteraciones.
+- ~~Estrategia CSRF.~~ Resuelta para los POST de registro, login y logout con token de sesión.
 - Uso de Services.
 - ~~Convención SQL definitiva.~~ Resuelto: camelCase confirmado contra el esquema real (ver `docs/04_DATABASE.md` §5).
 - Política de eliminación.
