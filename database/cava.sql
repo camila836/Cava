@@ -27,7 +27,9 @@ CREATE TABLE tipoDocumento (
 
 CREATE TABLE roles (
     idRoles         INT AUTO_INCREMENT PRIMARY KEY,
-    descripcionRol  VARCHAR(45) NOT NULL
+    codigoRol       VARCHAR(30) NOT NULL,
+    descripcionRol  VARCHAR(45) NOT NULL,
+    CONSTRAINT uqRolesCodigoRol UNIQUE (codigoRol)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE unidadesMedida (
@@ -59,7 +61,7 @@ CREATE TABLE usuarios (
     idUsuarios                      INT AUTO_INCREMENT PRIMARY KEY,
     nombres                         VARCHAR(45) NOT NULL,
     apellidos                       VARCHAR(45) NOT NULL,
-    identificacion                  VARCHAR(45) NOT NULL UNIQUE,
+    identificacion                  VARCHAR(45),
     correo                          VARCHAR(100) NOT NULL UNIQUE,
     direccion                       VARCHAR(45),
     telefono                        VARCHAR(45),
@@ -69,12 +71,22 @@ CREATE TABLE usuarios (
     fechaVencimientoClave           DATE,
     autorizacionTratamientoDatos    TINYINT(1) NOT NULL DEFAULT 0,
     idRoles                         INT NOT NULL,
-    idTipoDocumento                 INT NOT NULL,
-    idCiudades                      INT NOT NULL,
+    idTipoDocumento                 INT,
+    idCiudades                      INT,
+    CONSTRAINT uqUsuariosTipoDocumentoIdentificacion
+        UNIQUE (idTipoDocumento, identificacion),
+    CONSTRAINT chkUsuariosDocumentoCompleto
+        CHECK ((idTipoDocumento IS NULL) = (identificacion IS NULL)),
     CONSTRAINT fkUsuariosRoles         FOREIGN KEY (idRoles)         REFERENCES roles(idRoles) ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fkUsuariosTipoDocumento FOREIGN KEY (idTipoDocumento) REFERENCES tipoDocumento(idTipoDocumento) ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fkUsuariosCiudades      FOREIGN KEY (idCiudades)      REFERENCES ciudades(idCiudades) ON UPDATE RESTRICT ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Catálogos autoritativos mínimos de autenticación (Fase 8).
+INSERT INTO roles (codigoRol, descripcionRol) VALUES
+    ('CLIENTE', 'Cliente'),
+    ('ADMINISTRADOR', 'Administrador')
+ON DUPLICATE KEY UPDATE descripcionRol = VALUES(descripcionRol);
 
 -- 3. PRODUCTOS (depende de unidadesMedida, categoriaProductos)
 

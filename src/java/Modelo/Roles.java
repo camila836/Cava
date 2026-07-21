@@ -5,6 +5,7 @@ package Modelo;
 public class Roles {
 
     private int    idRoles;
+    private String codigoRol;
     private String descripcionRol;
 
     public Roles() {
@@ -23,6 +24,14 @@ public class Roles {
     
     }
 
+    public String getCodigoRol() {
+        return codigoRol;
+    }
+
+    public void setCodigoRol(String codigoRol) {
+        this.codigoRol = codigoRol;
+    }
+
     public String getDescripcionRol()           { 
         return descripcionRol; 
     
@@ -36,6 +45,7 @@ public class Roles {
 
     @Override
     public String toString() {
-        return "Roles{id=" + idRoles + ", descripcion='" + descripcionRol + "'}";
+        return "Roles{id=" + idRoles + ", codigo='" + codigoRol
+                + "', descripcion='" + descripcionRol + "'}";
     }
 }

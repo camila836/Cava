@@ -18,11 +18,13 @@ import Modelo.TipoDocumento;
 import Modelo.Transportadoras;
 import Modelo.UnidadesMedida;
 import Modelo.Usuarios;
+import Seguridad.PasswordSecurity;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 /**
  * Prueba de integracion ejecutable solo dentro de GlassFish: usa jdbc/CavaDS,
@@ -32,15 +34,15 @@ public final class DAORollbackIntegrationTest {
     private DAORollbackIntegrationTest() { }
 
     public static void run() throws Exception {
+        String tag = "F6B" + (System.nanoTime() % 100000000L);
         try (Connection control = Conexion.getConn()) {
-            verificarVacio(control);
-            ejecutar(control);
-            verificarVacio(control);
+            verificarTemporalAusente(control, tag);
+            ejecutar(control, tag);
+            verificarTemporalAusente(control, tag);
         }
     }
 
-    private static void ejecutar(Connection control) throws Exception {
-        String tag = "F6B" + (System.nanoTime() % 100000000L);
+    private static void ejecutar(Connection control, String tag) throws Exception {
         RolesDAO rolesDao = new RolesDAO(); TipoDocumentoDAO tiposDao = new TipoDocumentoDAO();
         CiudadesDAO ciudadesDao = new CiudadesDAO(); UnidadesMedidaDAO unidadesDao = new UnidadesMedidaDAO();
         CategoriaProductosDAO categoriasDao = new CategoriaProductosDAO(); EstadoEnvioDAO estadosDao = new EstadoEnvioDAO();
@@ -86,10 +88,22 @@ public final class DAORollbackIntegrationTest {
             espera(DAOErrorType.OPERATION_NOT_ALLOWED, () -> new EnviosDAO().eliminar(1));
             comprobar(usuariosDao.consultarPorId(-1) == null, "registro inexistente");
         } finally {
-            borrar(control, "DELETE FROM envios"); borrar(control, "DELETE FROM pagos"); borrar(control, "DELETE FROM pedidosDetalle"); borrar(control, "DELETE FROM pedidosCabeza");
-            borrar(control, "DELETE FROM inventario"); borrar(control, "DELETE FROM productos"); borrar(control, "DELETE FROM usuarios");
-            borrar(control, "DELETE FROM transportadoras"); borrar(control, "DELETE FROM mediosPagos"); borrar(control, "DELETE FROM estadoEnvio");
-            borrar(control, "DELETE FROM categoriaProductos"); borrar(control, "DELETE FROM unidadesMedida"); borrar(control, "DELETE FROM ciudades"); borrar(control, "DELETE FROM tipoDocumento"); borrar(control, "DELETE FROM roles");
+            String pattern = tag + "%";
+            borrar(control, "DELETE FROM envios WHERE numeroGuia LIKE ?", pattern);
+            borrar(control, "DELETE FROM pagos WHERE referenciaPago LIKE ?", pattern);
+            borrar(control, "DELETE d FROM pedidosDetalle d JOIN pedidosCabeza p ON p.idPedidosCabeza=d.idPedidosCabeza WHERE p.numeroPedido LIKE ?", pattern);
+            borrar(control, "DELETE FROM pedidosCabeza WHERE numeroPedido LIKE ?", pattern);
+            borrar(control, "DELETE i FROM inventario i JOIN productos p ON p.idProductos=i.idProductos WHERE p.descripcionProductos LIKE ?", pattern);
+            borrar(control, "DELETE FROM productos WHERE descripcionProductos LIKE ?", pattern);
+            borrar(control, "DELETE FROM usuarios WHERE correo LIKE ?", pattern);
+            borrar(control, "DELETE FROM transportadoras WHERE nit LIKE ?", pattern);
+            borrar(control, "DELETE FROM mediosPagos WHERE descripcionMediosPagos LIKE ?", pattern);
+            borrar(control, "DELETE FROM estadoEnvio WHERE descripcionEstadoEnvio LIKE ?", pattern);
+            borrar(control, "DELETE FROM categoriaProductos WHERE descripcionCategoriaProductos LIKE ?", pattern);
+            borrar(control, "DELETE FROM unidadesMedida WHERE descripcionUnidadesMed LIKE ?", pattern);
+            borrar(control, "DELETE FROM ciudades WHERE codigoCiudad LIKE ?", pattern);
+            borrar(control, "DELETE FROM tipoDocumento WHERE descripcion LIKE ?", pattern);
+            borrar(control, "DELETE FROM roles WHERE codigoRol LIKE ?", pattern);
         }
     }
 
@@ -114,7 +128,7 @@ public final class DAORollbackIntegrationTest {
         Envios envio = envio(tag + "I", pedido, estado, transportadora); EnviosDAO envios = new EnviosDAO(); envios.insertar(envio); comprobar(envios.consultarPorId(envio.getIdEnvios()).getFechaEnvios() != null, "mapeo envio"); envio.setDescripcionEnvios(tag); envios.actualizar(envio);
     }
 
-    private static Roles rol(String tag){Roles m=new Roles();m.setDescripcionRol(tag);return m;} private static Roles rol(int id,String tag){Roles m=rol(tag);m.setIdRoles(id);return m;}
+    private static Roles rol(String tag){Roles m=new Roles();m.setCodigoRol(tag.toUpperCase());m.setDescripcionRol(tag);return m;} private static Roles rol(int id,String tag){Roles m=rol(tag);m.setIdRoles(id);return m;}
     private static TipoDocumento tipo(String tag){TipoDocumento m=new TipoDocumento();m.setDescripcion(tag);return m;}
     private static Ciudades ciudad(String tag){Ciudades m=new Ciudades();m.setCodigoCiudad(tag);m.setNombreCiudad(tag);m.setCodigoPostal(null);return m;}
     private static UnidadesMedida unidad(String tag){UnidadesMedida m=new UnidadesMedida();m.setDescripcionUnidadesM(tag);return m;}
@@ -122,7 +136,7 @@ public final class DAORollbackIntegrationTest {
     private static EstadoEnvio estado(String tag){EstadoEnvio m=new EstadoEnvio();m.setDescripcionEstadoEnvio(tag);return m;}
     private static MediosPagos medio(String tag){MediosPagos m=new MediosPagos();m.setDescripcionMediosPagos(tag);return m;}
     private static Transportadoras transportadora(String tag){Transportadoras m=new Transportadoras();m.setNombreTransportadoras(tag);m.setNit(tag);m.setCorreo(null);m.setTelefono(null);return m;}
-    private static Usuarios usuario(String tag,Roles r,TipoDocumento t,Ciudades c){Usuarios m=new Usuarios();m.setNombres(tag);m.setApellidos(tag);m.setIdentificacion(tag);m.setCorreo(tag+"@test.local");m.setDireccion(null);m.setTelefono(null);m.setClave("test-only");m.setIsActivo(true);m.setFechaNacimiento(null);m.setFechaVencimientoClave(null);m.setAutorizacionTratamientoDatos(false);m.setIdRoles(r.getIdRoles());m.setIdTipoDocumento(t.getIdTipoDocumento());m.setIdCiudades(c.getIdCiudades());return m;}
+    private static Usuarios usuario(String tag,Roles r,TipoDocumento t,Ciudades c){Usuarios m=new Usuarios();m.setNombres(tag);m.setApellidos(tag);m.setIdentificacion(tag);m.setCorreo(tag+"@test.local");m.setDireccion(null);m.setTelefono(null);char[] password=(tag+"-credencial-sintetica-segura").toCharArray();try{m.setClave(PasswordSecurity.hash(password));}finally{Arrays.fill(password,'\0');}m.setIsActivo(true);m.setFechaNacimiento(null);m.setFechaVencimientoClave(null);m.setAutorizacionTratamientoDatos(false);m.setIdRoles(r.getIdRoles());m.setIdTipoDocumento(t.getIdTipoDocumento());m.setIdCiudades(c.getIdCiudades());return m;}
     private static Productos producto(String tag,UnidadesMedida u,CategoriaProductos c){Productos m=new Productos();m.setDescripcionProductos(tag);m.setPrecioProductos(new BigDecimal("12.50"));m.setIdUnidadesMedida(u.getIdUnidadesMedida());m.setIdCategoriaProductos(c.getIdCategoriaProductos());return m;}
     private static Productos productoInvalido(String tag){Productos m=new Productos();m.setDescripcionProductos(tag);m.setPrecioProductos(new BigDecimal("1.00"));m.setIdUnidadesMedida(-1);m.setIdCategoriaProductos(-1);return m;}
     private static Inventario inventario(String tag,Productos p){Inventario m=new Inventario();m.setDescripcionInventario(null);m.setStock(new BigDecimal("7.25"));m.setIdProductos(p.getIdProductos());return m;}
@@ -130,9 +144,10 @@ public final class DAORollbackIntegrationTest {
     private static PedidosDetalle detalle(PedidosCabeza p,Productos producto){PedidosDetalle m=new PedidosDetalle();m.setCantidadUnitaria(new BigDecimal("1.00"));m.setSubtotalPed(new BigDecimal("12.50"));m.setIdPedidosCabeza(p.getIdPedidosCabeza());m.setIdProductos(producto.getIdProductos());return m;}
     private static Pagos pago(String tag,PedidosCabeza pedido,MediosPagos medio){Pagos m=new Pagos();m.setFechaPagos(LocalDateTime.of(2026,7,20,12,1));m.setDescripcionPagos(null);m.setMonto(new BigDecimal("12.50"));m.setReferenciaPago(tag);m.setComprobantePago(null);m.setIdMediosPagos(medio.getIdMediosPagos());m.setIdPedidosCabeza(pedido.getIdPedidosCabeza());return m;}
     private static Envios envio(String tag,PedidosCabeza pedido,EstadoEnvio estado,Transportadoras transportadora){Envios m=new Envios();m.setFechaEnvios(LocalDateTime.of(2026,7,20,12,2));m.setDescripcionEnvios(null);m.setNumeroGuia(tag);m.setIdPedidosCabeza(pedido.getIdPedidosCabeza());m.setIdEstadoEnvio(estado.getIdEstadoEnvio());m.setIdTransportadoras(transportadora.getIdTransportadoras());return m;}
-    private static void verificarVacio(Connection c)throws Exception{String[] tablas={"categoriaProductos","ciudades","tipoDocumento","roles","unidadesMedida","transportadoras","estadoEnvio","mediosPagos","usuarios","productos","inventario","pedidosCabeza","pedidosDetalle","pagos","envios"};for(String t:tablas)comprobar(contar(c,t)==0,"tabla inicial/final vacia: "+t);}
+    private static void verificarTemporalAusente(Connection c,String tag)throws Exception{String pattern=tag+"%";comprobar(contarCoincidencias(c,"SELECT COUNT(*) FROM usuarios WHERE correo LIKE ?",pattern)==0,"usuarios temporales");comprobar(contarCoincidencias(c,"SELECT COUNT(*) FROM productos WHERE descripcionProductos LIKE ?",pattern)==0,"productos temporales");comprobar(contarCoincidencias(c,"SELECT COUNT(*) FROM pedidosCabeza WHERE numeroPedido LIKE ?",pattern)==0,"pedidos temporales");comprobar(contarCoincidencias(c,"SELECT COUNT(*) FROM roles WHERE codigoRol LIKE ?",pattern)==0,"roles temporales");try(PreparedStatement ps=c.prepareStatement("SELECT COUNT(*) FROM roles WHERE codigoRol IN ('CLIENTE','ADMINISTRADOR')");ResultSet rs=ps.executeQuery()){rs.next();comprobar(rs.getInt(1)==2,"roles autoritativos");}}
     private static int contar(Connection c,String tabla)throws Exception{try(PreparedStatement ps=c.prepareStatement("SELECT COUNT(*) FROM "+tabla);ResultSet rs=ps.executeQuery()){rs.next();return rs.getInt(1);}}
-    private static void borrar(Connection c,String sql)throws Exception{try(PreparedStatement ps=c.prepareStatement(sql)){ps.executeUpdate();}}
+    private static int contarCoincidencias(Connection c,String sql,String pattern)throws Exception{try(PreparedStatement ps=c.prepareStatement(sql)){ps.setString(1,pattern);try(ResultSet rs=ps.executeQuery()){rs.next();return rs.getInt(1);}}}
+    private static void borrar(Connection c,String sql,String pattern)throws Exception{try(PreparedStatement ps=c.prepareStatement(sql)){ps.setString(1,pattern);ps.executeUpdate();}}
     private static void espera(DAOErrorType tipo,Accion accion)throws Exception{try{accion.ejecutar();throw new AssertionError("Se esperaba "+tipo);}catch(DAOException e){comprobar(e.getErrorType()==tipo,"tipo "+tipo);}}
     private static void comprobar(boolean condicion,String nombre){if(!condicion)throw new AssertionError(nombre);}
     @FunctionalInterface private interface Accion{void ejecutar()throws Exception;}
