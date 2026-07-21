@@ -84,3 +84,17 @@ producción.
 El riesgo se acepta temporalmente solo para desarrollo local. Recuperación,
 MFA, correo de verificación, perfil, facturación, envío y catálogo DIVIPOLA
 permanecen fuera de alcance.
+
+## Auditoría final previa a integración
+
+- Se corrigió `DAORollbackIntegrationTest`: la limpieza ya no elimina tablas
+  completas ni los roles autoritativos, sino exclusivamente filas con el
+  prefijo sintético de la ejecución.
+- Las claves temporales de esa prueba ahora se generan con el mismo PBKDF2 de
+  la aplicación y los arreglos de caracteres se limpian al terminar.
+- `clean`, `compile`, `compile-test`, `dist`, las once suites ejecutables, la
+  prueba DAO en GlassFish y el flujo HTTP de autenticación volvieron a superar
+  la validación. El cierre dejó dos roles y cero usuarios.
+- La medición final mantuvo 600.000 iteraciones: 855,56–1.513,02 ms al generar,
+  1.003,90–1.350,53 ms al verificar correctamente y 946,30–2.032,88 ms al
+  rechazar. Sigue siendo una medición local y no habilita producción.
