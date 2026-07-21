@@ -15,10 +15,10 @@ SET @indiceIdentificacion := (
     FROM information_schema.STATISTICS
     WHERE TABLE_SCHEMA = DATABASE()
       AND TABLE_NAME = 'usuarios'
-      AND COLUMN_NAME = 'identificacion'
       AND NON_UNIQUE = 0
     GROUP BY INDEX_NAME
     HAVING COUNT(*) = 1
+       AND MAX(COLUMN_NAME) = 'identificacion'
     LIMIT 1
 );
 
