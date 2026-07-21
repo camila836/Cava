@@ -38,6 +38,9 @@ public final class WebErrorMapper {
 
     public static WebErrorDescriptor descriptorFor(int status) {
         switch (status) {
+            case 403:
+                return new WebErrorDescriptor(403, "Acceso no autorizado",
+                        "No tienes permiso para acceder a este recurso.");
             case 400:
                 return new WebErrorDescriptor(400, "Solicitud no válida",
                         "Revisa los datos enviados e inténtalo nuevamente.");

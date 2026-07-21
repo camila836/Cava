@@ -25,8 +25,8 @@
       <li><a class="active" href="${pageContext.request.contextPath}/productos">La Tienda</a></li>
     </ul>
     <div class="nav-actions">
-      <a class="btn-premium-round" href="${pageContext.request.contextPath}/InicioSesion.jsp">Entrar</a>
-      <a class="btn-premium-round btn-filled" href="${pageContext.request.contextPath}/RegistrarUsuario.jsp">Registrarse</a>
+      <a class="btn-premium-round" href="${pageContext.request.contextPath}/login">Entrar</a>
+      <a class="btn-premium-round btn-filled" href="${pageContext.request.contextPath}/registro">Registrarse</a>
     </div>
   </nav>
 

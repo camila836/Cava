@@ -40,8 +40,8 @@
         </svg>
         <span class="cart-count" id="cart-count">0</span>
       </button>
-      <a class="btn-premium-round" href="${pageContext.request.contextPath}/InicioSesion.jsp">Entrar</a>
-      <a class="btn-premium-round btn-filled" href="${pageContext.request.contextPath}/RegistrarUsuario.jsp">Registrarse</a>
+      <a class="btn-premium-round" href="${pageContext.request.contextPath}/login">Entrar</a>
+      <a class="btn-premium-round btn-filled" href="${pageContext.request.contextPath}/registro">Registrarse</a>
       <button class="btn-premium-round" onclick="navigate('contacto')">Asesoría</button>
     </div>
   </nav>
