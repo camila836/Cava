@@ -17,8 +17,8 @@ public class Usuarios {
     private LocalDate fechaVencimientoClave;
     private boolean   autorizacionTratamientoDatos;
     private int     idRoles;
-    private int     idTipoDocumento;
-    private int     idCiudades;
+    private Integer idTipoDocumento;
+    private Integer idCiudades;
 
     public Usuarios() {
     
@@ -170,22 +170,20 @@ public class Usuarios {
     }
     
 
-    public int     getIdTipoDocumento()                 { 
-        return idTipoDocumento; 
-    
+    public Integer getIdTipoDocumento() {
+        return idTipoDocumento;
     }
     
     
-    public void    setIdTipoDocumento(int idTipoDocumento)     { 
-        this.idTipoDocumento = idTipoDocumento; 
-    
+    public void setIdTipoDocumento(Integer idTipoDocumento) {
+        this.idTipoDocumento = idTipoDocumento;
     }
 
-    public int     getIdCiudades()          { 
-        return idCiudades; 
+    public Integer getIdCiudades() {
+        return idCiudades;
     }
      
-    public void    setIdCiudades(int idCiudades)       { this.idCiudades = idCiudades; }
+    public void    setIdCiudades(Integer idCiudades)       { this.idCiudades = idCiudades; }
 
     @Override
 public String toString() {

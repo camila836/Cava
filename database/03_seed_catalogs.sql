@@ -1,11 +1,6 @@
--- CAVA - Fase 4B
--- Catálogos iniciales de la primera versión.
---
--- No existen valores empresariales autoritativos para roles, tipos de
--- documento, ciudades, categorías, unidades de medida, estados de envío,
--- medios de pago o transportadoras. Esta fase no inventa datos.
---
--- El archivo queda reservado y se ejecuta sin DML. Las semillas solo podrán
--- incorporarse después de aprobar valores, claves naturales y estrategia de
--- reejecución sin duplicados. No deben incluir usuarios, contraseñas ni datos
--- personales.
+-- CAVA - Fase 8
+-- Únicos catálogos autoritativos aprobados para autenticación.
+INSERT INTO roles (codigoRol, descripcionRol) VALUES
+    ('CLIENTE', 'Cliente'),
+    ('ADMINISTRADOR', 'Administrador')
+ON DUPLICATE KEY UPDATE descripcionRol = VALUES(descripcionRol);
