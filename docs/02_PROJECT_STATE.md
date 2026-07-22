@@ -167,13 +167,13 @@ recompiló el proyecto durante esta limpieza posterior.
 | Conexión | Fase 3 cerrada; JNDI global, pool, WAR, despliegue y consulta real validados tras reinicio |
 | Base de datos | Fase 4 cerrada; instalador de 15 tablas validado en base temporal |
 | Models | Fase 5 cerrada; 15 Models contrastados y seis atributos decimales migrados a `BigDecimal` |
-| DAO | Los 15 compilan; requieren auditoría funcional y pruebas de persistencia |
+| DAO | Fase 6 cerrada; 15 DAO corregidos y probados; `UnidadesMedidaDAO` revalidado en Fase 9 |
 | Servlets | Fase 7 cerrada: `/inicio` y `/productos` implementados y validados |
 | Autenticación | Fase 8 cerrada: registro mínimo, PBKDF2, login, sesión y logout validados |
 | Seguridad | Fase 8 cerrada en desarrollo local: CSRF, renovación de sesión, cookies y autorización admin; rate limiting pendiente obligatorio antes de exposición pública |
-| Dashboard real | No implementado |
+| Dashboard real | Fase 9 cerrada: primer CRUD vertical de unidades de medida operativo |
 | Tienda conectada | Listado público de productos conectado en solo lectura; experiencia completa pendiente de Fase 11 |
-| Pruebas | Fase 7 validó unidades, JSP, WAR, JNDI de lectura y contratos HTTP públicos |
+| Pruebas | Fase 9 validó DAO real, CRUD HTTP, DOM, permisos, limpieza, WAR, rutas y `CavaPool` |
 | Entrega | No iniciada |
 
 ---
@@ -280,7 +280,8 @@ Estado actual:
 
 ```text
 COMPILACION Y PRUEBAS VALIDADAS; FASE 6 (6A Y 6B) CERRADA;
-FASE 7 (7A Y 7B) CERRADA; FASE 8 CERRADA; FASE 9 NO INICIADA
+FASE 7 (7A Y 7B) CERRADA; FASE 8 CERRADA; FASE 9 CERRADA;
+FASE 10 NO INICIADA
 ```
 
 ---
@@ -356,6 +357,20 @@ La autenticación todavía no limita intentos fallidos. Existe riesgo de fuerza
 bruta mientras CAVA permanezca sin rate limiting. Este control debe
 implementarse y probarse antes de cualquier exposición pública o paso a
 producción. El riesgo se acepta temporalmente solo para desarrollo local.
+
+## 9.6 Cierre de Fase 9
+
+La Fase 9 — Primer CRUD vertical queda **CERRADA** en la rama local
+`feature/fase-9-crud-vertical`. El módulo `unidadesMedida` completa el flujo
+JSP, JavaScript, Servlet, DAO, MariaDB, JSON y actualización DOM con permisos
+administrativos y CSRF.
+
+Se aplicó exclusivamente `F009__unidades_medida_unicas.sql` después de validar
+la colación real y la ausencia de duplicados. MariaDB confirmó la restricción
+`uqUnidadesMedidaDescripcion`; permanecieron 15 tablas, 14 FK, F008 y los datos
+previos. Las pruebas DAO, HTTP y DOM terminaron sin datos sintéticos, el WAR
+normal fue desplegado y `CavaPool` respondió correctamente. Evidencia completa:
+`docs/auditorias/INFORME_FASE9.md`. La Fase 10 permanece **NO INICIADA**.
 
 ## 10. Decisiones pendientes
 

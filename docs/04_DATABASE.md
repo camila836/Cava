@@ -68,7 +68,8 @@ Pedidos, pagos, envíos y movimientos de inventario deben conservar trazabilidad
 ## 3. Estado conocido
 
 El proyecto contiene un instalador principal separado en `00`–`03`, una
-instantánea de compatibilidad `cava.sql` y cuatro migraciones futuras ordenadas.
+instantánea de compatibilidad `cava.sql`, dos migraciones aplicadas y cuatro
+migraciones futuras ordenadas.
 
 También existen tablas o propuestas relacionadas con:
 
@@ -86,9 +87,10 @@ La Fase 4 definió:
 2. el instalador oficial usa `00_create_database.sql` a
    `03_seed_catalogs.sql`;
 3. `F008__autenticacion_base.sql` es la actualización aplicada para Fase 8;
-4. las migraciones V001–V004 son futuras y no se ejecutan en la instalación;
-5. el orden obligatorio está en `database/README.md`;
-6. los únicos valores de catálogo autorizados son los roles `CLIENTE` y
+4. `F009__unidades_medida_unicas.sql` es la actualización aplicada para Fase 9;
+5. las migraciones V001–V004 son futuras y no se ejecutan en la instalación;
+6. el orden obligatorio está en `database/README.md`;
+7. los únicos valores de catálogo autorizados son los roles `CLIENTE` y
    `ADMINISTRADOR`; no existen semillas de usuarios, documentos o ciudades.
 
 ---
@@ -105,6 +107,7 @@ database/
 ├── 03_seed_catalogs.sql
 ├── migrations/
 │   ├── F008__autenticacion_base.sql
+│   ├── F009__unidades_medida_unicas.sql
 │   ├── V001__favoritos.sql
 │   ├── V002__puntos_usuario.sql
 │   ├── V003__resenas.sql
@@ -622,6 +625,17 @@ La matriz debe cubrir todas las entidades.
   ausentes.
 - La migración de una instalación existente y una instalación nueva fueron
   comparadas por columnas e índices en bases temporales aisladas.
+
+## 20.2 Fase 9 — unicidad de unidades de medida
+
+- `unidadesMedida.descripcionUnidadesMed` conserva `VARCHAR(45) NOT NULL` y
+  colación `utf8mb4_unicode_ci`.
+- `F009__unidades_medida_unicas.sql` añade únicamente
+  `uqUnidadesMedidaDescripcion` como UNIQUE sobre esa columna.
+- Antes de aplicarla se comprobaron cero grupos duplicados bajo la colación
+  real; después, `information_schema` y `SHOW CREATE TABLE` confirmaron el
+  índice único.
+- La migración real preservó 15 tablas, 14 FK, F008 y todos los datos previos.
 
 ## 21. Criterios de aceptación
 

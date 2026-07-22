@@ -33,7 +33,8 @@ CREATE TABLE roles (
 
 CREATE TABLE unidadesMedida (
     idUnidadesMedida        INT AUTO_INCREMENT PRIMARY KEY,
-    descripcionUnidadesMed  VARCHAR(45) NOT NULL
+    descripcionUnidadesMed  VARCHAR(45) NOT NULL,
+    CONSTRAINT uqUnidadesMedidaDescripcion UNIQUE (descripcionUnidadesMed)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE transportadoras (
