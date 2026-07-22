@@ -32,6 +32,13 @@
   --font-body:'Jost', 'Helvetica Neue', Arial, sans-serif;
 }
 
+.grain-filter{position:absolute; width:0; height:0; overflow:hidden;}
+.brand{text-decoration:none;}
+.logout-form{margin:0;}
+.side-btn:disabled{cursor:not-allowed; opacity:.58;}
+.side-btn:disabled:hover{padding-left:14px; background:transparent;}
+.admin-workspace{width:auto;}
+
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
@@ -274,6 +281,16 @@ a{color:inherit;}
 }
 @media (max-width: 540px){
   .card-grid{grid-template-columns:1fr;}
+  .top-nav{height:72px; padding:0 12px;}
+  .brand-word .tag{display:none;}
+  .brand-mark{width:34px; height:34px;}
+  .nav-right{gap:8px;}
+  .nav-admin{display:none;}
+  .nav-reset{padding:8px 11px; font-size:10px;}
+  .ticker{top:72px;}
+  .layout{margin-top:106px; min-height:calc(100vh - 106px);}
+  .sidebar{top:106px; width:58px; padding:20px 7px;}
+  .main{margin-left:58px; padding:30px 12px 60px;}
 }
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
