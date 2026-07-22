@@ -378,15 +378,20 @@ JSP admin
 
 ## Criterios de aceptación
 
-- [ ] Listar.
-- [ ] Crear.
-- [ ] Editar.
-- [ ] Eliminar o desactivar.
-- [ ] Validar.
-- [ ] Manejar errores.
-- [ ] Persistir.
-- [ ] Respetar permisos.
-- [ ] No duplicar código.
+- [x] Listar.
+- [x] Crear.
+- [x] Editar.
+- [x] Eliminar o desactivar.
+- [x] Validar.
+- [x] Manejar errores.
+- [x] Persistir.
+- [x] Respetar permisos.
+- [x] No duplicar código.
+
+**Cierre:** Fase 9 completada en desarrollo local con el CRUD vertical de
+`unidadesMedida`, restricción única F009, JSON administrativo, CSRF, permisos,
+pruebas DAO/HTTP/DOM, limpieza sintética y despliegue final. Evidencia:
+`docs/auditorias/INFORME_FASE9.md`. Fase 10 permanece no iniciada.
 
 ---
 

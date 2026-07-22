@@ -11,6 +11,7 @@ import java.util.Base64;
 public final class CsrfProtection {
 
     public static final String PARAMETER = "csrfToken";
+    public static final String HEADER = "X-CSRF-Token";
     private static final String SESSION_ATTRIBUTE = "csrfToken";
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -39,7 +40,10 @@ public final class CsrfProtection {
             return false;
         }
         Object expected = session.getAttribute(SESSION_ATTRIBUTE);
-        String supplied = request.getParameter(PARAMETER);
+        String supplied = request.getHeader(HEADER);
+        if (supplied == null) {
+            supplied = request.getParameter(PARAMETER);
+        }
         if (!(expected instanceof String) || supplied == null) {
             return false;
         }
