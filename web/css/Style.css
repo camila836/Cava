@@ -7,6 +7,23 @@
 }
 
 :root {
+  --cava-chocolate-profundo: #2E1A13;
+  --cava-chocolate-medio: #553527;
+  --cava-cacao-suave: #765343;
+  --cava-dorado: #C5A25D;
+  --cava-dorado-hover: #A98543;
+  --cava-crema: #F5EBDD;
+  --cava-beige: #E8D7C3;
+  --cava-blanco-calido: #FFF9F1;
+  --cava-texto-principal: #2B1A14;
+  --cava-texto-claro: #FFF9F1;
+  --cava-espacio-1: 0.5rem;
+  --cava-espacio-2: 0.75rem;
+  --cava-espacio-3: 1rem;
+  --cava-espacio-4: 1.5rem;
+  --cava-radio-boton: 10px;
+  --cava-transicion: 220ms ease;
+  --cava-header-h: 78px;
   --cacao-deep:     #2b1810;
   --cacao-mid:      #754d3c;
   --caramel:        #c8973a;
@@ -1331,4 +1348,424 @@ footer::before {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ── AV-02 · SISTEMA VISUAL DE INICIO ───────────────────── */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--cava-espacio-3);
+  left: var(--cava-espacio-3);
+  z-index: 1100;
+  padding: 0.7rem 1rem;
+  border-radius: var(--cava-radio-boton);
+  background: var(--cava-blanco-calido);
+  color: var(--cava-chocolate-profundo);
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform var(--cava-transicion);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.cava-home {
+  background: var(--cava-blanco-calido);
+  color: var(--cava-texto-principal);
+}
+
+.cava-home .panel {
+  background: var(--cava-blanco-calido);
+}
+
+.cava-home .site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1000;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--cava-transicion), border-color var(--cava-transicion), box-shadow var(--cava-transicion);
+}
+
+.cava-home .site-header.is-scrolled,
+.cava-home .site-header.is-menu-open {
+  background: rgba(46, 26, 19, 0.97);
+  border-bottom-color: rgba(197, 162, 93, 0.24);
+  box-shadow: 0 10px 28px rgba(46, 26, 19, 0.16);
+}
+
+.cava-home .cava-nav {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: min(100%, 1480px);
+  min-height: var(--cava-header-h);
+  height: auto;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 3vw, 3rem);
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.cava-home .nav-logo {
+  flex: 0 0 auto;
+  color: var(--cava-texto-claro);
+  font-size: clamp(1.45rem, 2vw, 1.85rem);
+  font-weight: 500;
+}
+
+.cava-home .nav-logo:hover {
+  color: var(--cava-dorado);
+}
+
+.cava-home .nav-logo-mark {
+  color: var(--cava-dorado);
+}
+
+.cava-home .nav-menu {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cava-espacio-4);
+  margin-left: clamp(2.5rem, 4vw, 4rem);
+}
+
+.cava-home .nav-links {
+  flex: 0 0 auto;
+  align-items: center;
+  gap: clamp(1.25rem, 1.7vw, 1.8rem);
+}
+
+.cava-home .nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.8rem 0 0.55rem;
+  color: var(--cava-texto-claro);
+  font-size: 0.72rem;
+  font-weight: 500;
+  opacity: 0.86;
+}
+
+.cava-home .nav-links a::after {
+  height: 2px;
+  background: var(--cava-dorado);
+}
+
+.cava-home .nav-links a:hover,
+.cava-home .nav-links a.active {
+  color: var(--cava-dorado);
+  opacity: 1;
+}
+
+.cava-home .nav-actions {
+  flex: 0 0 auto;
+  margin-left: auto;
+  gap: var(--cava-espacio-2);
+}
+
+.cava-home .nav-action {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.4rem;
+  color: var(--cava-texto-claro);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: 8px;
+  transition: color var(--cava-transicion), background-color var(--cava-transicion);
+}
+
+.cava-home .nav-action svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+}
+
+.cava-home a.nav-action:hover {
+  color: var(--cava-dorado);
+  background: rgba(197, 162, 93, 0.1);
+}
+
+.cava-home .nav-action--pending:disabled {
+  color: var(--cava-texto-claro);
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.cava-home .nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid rgba(255, 249, 241, 0.46);
+  border-radius: 9px;
+  color: var(--cava-texto-claro);
+}
+
+.cava-home .nav-toggle-line {
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform var(--cava-transicion), opacity var(--cava-transicion);
+}
+
+.cava-home .site-header.is-menu-open .nav-toggle-line:nth-child(2) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.cava-home .site-header.is-menu-open .nav-toggle-line:nth-child(3) {
+  opacity: 0;
+}
+
+.cava-home .site-header.is-menu-open .nav-toggle-line:nth-child(4) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.cava-button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cava-espacio-1);
+  padding: 0.78rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--cava-radio-boton);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+  box-shadow: 0 5px 14px rgba(46, 26, 19, 0.13);
+  transition: color var(--cava-transicion), background-color var(--cava-transicion), border-color var(--cava-transicion), box-shadow var(--cava-transicion), transform var(--cava-transicion);
+}
+
+.cava-button--compact {
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  font-size: 0.65rem;
+}
+
+.cava-button--primary {
+  background: var(--cava-dorado);
+  border-color: var(--cava-dorado);
+  color: var(--cava-chocolate-profundo);
+}
+
+.cava-button--primary:hover {
+  background: var(--cava-dorado-hover);
+  border-color: var(--cava-dorado-hover);
+  color: var(--cava-chocolate-profundo);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(46, 26, 19, 0.2);
+}
+
+.cava-button--secondary-dark {
+  background: transparent;
+  border-color: var(--cava-crema);
+  color: var(--cava-texto-claro);
+  box-shadow: none;
+}
+
+.cava-button--secondary-dark:hover {
+  background: var(--cava-crema);
+  color: var(--cava-chocolate-profundo);
+  transform: translateY(-1px);
+}
+
+.cava-button--secondary-light {
+  background: transparent;
+  border-color: var(--cava-chocolate-medio);
+  color: var(--cava-chocolate-medio);
+  box-shadow: none;
+}
+
+.cava-button--secondary-light:hover {
+  background: var(--cava-chocolate-medio);
+  color: var(--cava-texto-claro);
+  transform: translateY(-1px);
+}
+
+.cava-button:active,
+.cava-button--primary:active,
+.cava-button--secondary-dark:active,
+.cava-button--secondary-light:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.cava-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  box-shadow: none;
+}
+
+.cava-home :where(a, button):focus-visible,
+.skip-link:focus-visible {
+  outline: 3px solid var(--cava-dorado);
+  outline-offset: 3px;
+}
+
+.cava-home .video-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(46, 26, 19, 0.8) 0%,
+    rgba(85, 53, 39, 0.48) 62%,
+    rgba(46, 26, 19, 0.26) 100%
+  );
+}
+
+.cava-home .quality-section {
+  background: linear-gradient(
+    135deg,
+    var(--cava-chocolate-profundo) 0%,
+    var(--cava-chocolate-medio) 100%
+  );
+}
+
+.cava-home .featured-strip {
+  background: var(--cava-blanco-calido);
+}
+
+.cava-home .about-luxury-grid {
+  background: var(--cava-beige);
+}
+
+.cava-home .services-layout {
+  background: var(--cava-crema);
+}
+
+.cava-home .service-card,
+.cava-home .quality-icon-card {
+  border-radius: 12px;
+}
+
+.cava-home :where(#quienes, #servicios, #calidad) {
+  scroll-margin-top: calc(var(--cava-header-h) + var(--cava-espacio-3));
+}
+
+@media (max-width: 1180px) {
+  .cava-home .cava-nav {
+    min-height: 72px;
+  }
+
+  .cava-home .nav-toggle {
+    display: inline-flex;
+  }
+
+  .cava-home .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: calc(100vh - 72px);
+    margin: 0;
+    padding: 1.25rem clamp(1.25rem, 4vw, 3rem) 1.5rem;
+    overflow-y: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    background: var(--cava-chocolate-profundo);
+    border-top: 1px solid rgba(197, 162, 93, 0.2);
+    box-shadow: 0 18px 30px rgba(46, 26, 19, 0.22);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-0.75rem);
+    transition: opacity var(--cava-transicion), visibility var(--cava-transicion), transform var(--cava-transicion);
+  }
+
+  .cava-home .site-header.is-menu-open .nav-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .cava-home .nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .cava-home .nav-links a {
+    width: 100%;
+    padding: 0.85rem 0;
+  }
+
+  .cava-home .nav-links a::after {
+    left: 0;
+  }
+
+  .cava-home .nav-actions {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) repeat(3, minmax(92px, auto));
+    align-items: stretch;
+    margin-left: 0;
+  }
+
+  .cava-home .nav-action {
+    border: 1px solid rgba(255, 249, 241, 0.18);
+  }
+}
+
+@media (max-width: 680px) {
+  .cava-home .cava-nav {
+    padding-inline: 1rem;
+  }
+
+  .cava-home .nav-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cava-home .nav-gift {
+    grid-column: 1 / -1;
+  }
+
+  .cava-home .nav-action {
+    justify-content: flex-start;
+    padding-inline: 0.8rem;
+  }
+
+  .cava-home .hero-content {
+    padding: 4.75rem 1.25rem 0;
+  }
+
+  .cava-home .hero-actions .cava-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
