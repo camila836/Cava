@@ -262,6 +262,13 @@ nav {
   color: var(--cacao-deep);
   transform: translateY(-2px);
 }
+
+.btn-premium-round:disabled,
+.nav-cart:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
 .btn-filled {
   background: var(--caramel);
   border-color: var(--caramel);
@@ -333,15 +340,14 @@ nav {
 
 /* ── PANELES SPA ─────────────────────────────────────────── */
 .panel {
-  position: absolute;
-  top: var(--top-offset);
+  position: relative;
+  top: auto;
   left: 0;
   width: 100%;
-  min-height: calc(100vh - var(--top-offset));
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(18px);
-  transition: opacity var(--t) var(--ease-lux), transform var(--t) var(--ease-lux);
+  min-height: 100vh;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
   background: var(--crema);
 }
 .panel.active {
@@ -352,7 +358,7 @@ nav {
 
 /* Panel inicio: no top offset, toma toda la pantalla */
 #panel-inicio {
-  top: 0;
+  top: auto;
   min-height: 100vh;
 }
 
@@ -652,6 +658,7 @@ nav {
   align-items: center;
   justify-content: center;
   margin-bottom: 1.2rem;
+  color: var(--caramel-light);
 }
 .service-icon svg {
   width: 18px; height: 18px;
@@ -669,6 +676,7 @@ nav {
   color: var(--text-muted);
   line-height: 1.7;
 }
+.service-card .btn-premium-round { margin-top: 1.2rem; }
 
 /* ── PANEL: TIENDA ────────────────────────────────────────── */
 .shop-layout {
@@ -680,6 +688,26 @@ nav {
   gap: 3rem;
   align-items: start;
 }
+.shop-hero {
+  padding: calc(var(--top-offset) + 4.5rem) 2rem 3.5rem;
+  text-align: center;
+  color: var(--text-on-dark);
+  background:
+    radial-gradient(70% 140% at 50% 0%, rgba(117,77,60,.9), transparent 70%),
+    linear-gradient(150deg, var(--cacao-deep), #1f0e07);
+}
+.shop-hero .hero-tag { margin-bottom: .8rem; }
+.shop-hero h1 {
+  margin: 0 0 .8rem;
+  font: italic 500 clamp(2.6rem, 6vw, 4.4rem)/1 'Cormorant Garamond', serif;
+}
+.shop-hero p { max-width: 620px; margin: 0 auto; color: rgba(241,228,210,.76); line-height: 1.7; }
+.shop-filters > p { color: var(--text-muted); font-size: .84rem; line-height: 1.7; margin: 0 0 1.5rem; }
+.shop-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.8rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border-light); }
+.shop-section-head .hero-tag { margin-bottom: .35rem; color: var(--caramel); }
+.shop-section-head h2 { margin: 0; font: 500 2rem/1.15 'Cormorant Garamond', serif; }
+.shop-note { color: var(--text-muted); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; }
+.products-empty { max-width: 560px; }
 .shop-filters {
   position: sticky;
   top: 1.5rem;
@@ -1280,6 +1308,25 @@ footer::before {
   .cat-grid { grid-template-columns: 1fr; }
   .cat-grid .cat-card:nth-child(3) { display: block; }
   .cart-drawer { width: 100vw; }
+  .shop-section-head { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 560px) {
+  :root { --nav-h: 72px; --top-offset: 106px; }
+  nav { height: var(--nav-h); }
+  .nav-logo { font-size: 1.3rem; }
+  .nav-actions { gap: .45rem; }
+  .nav-actions .nav-cart { display: none; }
+  .btn-premium-round { padding: .55rem .8rem; font-size: .58rem; }
+  .hero-content { padding: 0 1.25rem; }
+  .hero-actions { gap: .65rem; }
+  .btn-primary, .btn-outline { width: 100%; justify-content: center; }
+  .quality-section { padding: 4rem 1.25rem; }
+  .quality-icons { grid-template-columns: 1fr; }
+  .featured-strip, .services-layout { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .section-header { align-items: flex-start; flex-direction: column; gap: 1rem; }
+  .shop-hero { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .shop-layout { padding-left: 1.25rem; padding-right: 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

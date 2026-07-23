@@ -1,43 +1,16 @@
-/* Importar variables comunes si es necesario */
 @import url('InicioSesion.css');
 
-/* ── GRID ESPECIAL PARA REGISTRO ── */
-.g2 { 
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
-  gap: 0.9rem; 
-}
-
-/* ── PANEL DE REGISTRO ── */
 .wrap { max-width: 980px; }
-
-.side { flex: 0 0 270px; min-height: 580px; }
-
+.side { flex-basis: 270px; min-height: 580px; }
 .form-panel { padding: 2.4rem 2.5rem; }
+.g2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .9rem; }
+.field { min-width: 0; margin-bottom: .9rem; }
+input[type=text], input[type=email], input[type=password] { padding: .7rem .9rem; font-size: .85rem; }
+.consent { display: flex; align-items: flex-start; gap: .6rem; color: var(--text-muted); font-size: .76rem; line-height: 1.65; margin: .5rem 0 1.2rem; }
+.consent input[type=checkbox] { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; accent-color: var(--caramel); }
+.field .aviso { margin: .45rem 0 0; padding: .45rem .55rem; }
 
-/* Ajustes de campos para registro */
-input[type=text], input[type=tel], input[type=date], select {
-  width: 100%; padding: 0.7rem 0.9rem; border: 1px solid rgba(92,58,33,0.18);
-  border-radius: 7px; background: rgba(255,255,255,0.6);
-}
-
-/* ── CONSENTIMIENTO ── */
-.consent {
-  display: flex; align-items: flex-start; gap: 0.6rem;
-  font-size: 0.76rem; color: var(--text-muted); margin: 0.5rem 0 1.2rem;
-}
-
-.aviso {
-  min-height: 22px;
-  margin: 0 0 0.9rem;
-  font-size: 0.82rem;
-}
-
-.aviso.correcto { color: #3f6b3a; }
-.aviso.error { color: #9b3b2b; }
-
-/* ── RESPONSIVE ── */
 @media (max-width: 720px) {
-  .side { display: none; }
-  .g2 { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr; gap: 0; }
+  .form-panel { padding: 2rem 1.4rem; }
 }
