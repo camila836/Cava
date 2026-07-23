@@ -27,8 +27,7 @@
       <div class="nav-menu" id="navegacion-principal" data-nav-menu>
         <ul class="nav-links">
           <li><a href="${pageContext.request.contextPath}/inicio" class="active" aria-current="page">Inicio</a></li>
-          <!-- AV-02 conserva Origen y Servicios como destinos reales dentro de Inicio; no crea rutas nuevas. -->
-          <li><a href="#quienes">Origen</a></li>
+          <li><a href="${pageContext.request.contextPath}/origen">Origen</a></li>
           <li><a href="${pageContext.request.contextPath}/productos">Tienda</a></li>
           <li><a href="#servicios">Servicios</a></li>
         </ul>
@@ -78,7 +77,7 @@
           </h1>
           <div class="hero-actions">
             <a class="cava-button cava-button--primary" href="${pageContext.request.contextPath}/productos">Explorar la tienda</a>
-            <a class="cava-button cava-button--secondary-dark" href="#quienes">Conocer nuestro origen</a>
+            <a class="cava-button cava-button--secondary-dark" href="${pageContext.request.contextPath}/origen">Conocer nuestro origen</a>
           </div>
         </div>
         <a class="scroll-hint" href="#calidad" aria-label="Descubrir más">
@@ -93,12 +92,12 @@
             <span class="hero-tag">Nuestro compromiso</span>
             <h2 id="quality-title">Calidad que se siente</h2>
             <p>Seleccionamos cada ingrediente para ofrecer un chocolate auténtico y artesanal, del grano a la barra.</p>
-            <a class="cava-button cava-button--secondary-dark" href="#quienes">Conócenos</a>
+            <a class="cava-button cava-button--secondary-dark" href="${pageContext.request.contextPath}/origen">Conócenos</a>
           </div>
           <div class="quality-icons" aria-label="Valores de CAVA">
             <div class="quality-icon-card"><div class="icon-glyph" aria-hidden="true">✦</div><span>Ingredientes naturales</span></div>
             <div class="quality-icon-card"><div class="icon-glyph" aria-hidden="true">◇</div><span>Hecho a mano</span></div>
-            <div class="quality-icon-card"><div class="icon-glyph" aria-hidden="true">◉</div><span>Comercio justo</span></div>
+            <div class="quality-icon-card"><div class="icon-glyph" aria-hidden="true">◉</div><span>Respeto por el origen</span></div>
           </div>
         </div>
       </section>
@@ -111,28 +110,63 @@
           </div>
           <a class="section-link" href="${pageContext.request.contextPath}/productos">Ver catálogo</a>
         </div>
-        <div class="cat-grid">
-          <a class="cat-card" href="${pageContext.request.contextPath}/productos">
-            <div class="cat-card-bg"></div><div class="cat-card-overlay"></div>
-            <div class="cat-card-body"><h3 class="cat-card-title">Chocolate <em>con leche</em></h3><span class="cat-card-cta">Explorar</span></div>
-          </a>
-          <a class="cat-card" href="${pageContext.request.contextPath}/productos">
-            <div class="cat-card-bg"></div><div class="cat-card-overlay"></div>
-            <div class="cat-card-body"><h3 class="cat-card-title">Cacao de <em>origen</em></h3><span class="cat-card-cta">Explorar</span></div>
-          </a>
-          <a class="cat-card" href="${pageContext.request.contextPath}/productos">
-            <div class="cat-card-bg"></div><div class="cat-card-overlay"></div>
-            <div class="cat-card-body"><h3 class="cat-card-title">Regalos <em>premium</em></h3><span class="cat-card-cta">Explorar</span></div>
-          </a>
+        <div class="collections-carousel" data-carousel role="region" aria-roledescription="carrusel" aria-labelledby="collections-title">
+          <div class="carousel-viewport" data-carousel-viewport>
+            <ul class="carousel-track" data-carousel-track role="list">
+              <li class="collection-slide">
+                <a class="collection-card collection-card--studio" href="${pageContext.request.contextPath}/productos">
+                  <img src="${pageContext.request.contextPath}/img/coleccion-chocolate-artesanal.svg" alt="Presentación de chocolate artesanal CAVA" width="1254" height="1254" loading="lazy" decoding="async">
+                  <span class="collection-card-overlay" aria-hidden="true"></span>
+                  <span class="collection-card-body"><span class="collection-card-title">Chocolate <em>artesanal</em></span><span class="collection-card-cta">Ver en la tienda</span></span>
+                </a>
+              </li>
+              <li class="collection-slide">
+                <a class="collection-card collection-card--studio" href="${pageContext.request.contextPath}/productos">
+                  <img src="${pageContext.request.contextPath}/img/crema-cacao.svg" alt="Frasco de crema de cacao CAVA" width="1473" height="1068" loading="lazy" decoding="async">
+                  <span class="collection-card-overlay" aria-hidden="true"></span>
+                  <span class="collection-card-body"><span class="collection-card-title">Crema de <em>cacao</em></span><span class="collection-card-cta">Explorar</span></span>
+                </a>
+              </li>
+              <li class="collection-slide">
+                <a class="collection-card collection-card--studio" href="${pageContext.request.contextPath}/productos">
+                  <img src="${pageContext.request.contextPath}/img/detalle-chocolate.svg" alt="Caja de almendras cubiertas con chocolate CAVA" width="1254" height="1254" loading="lazy" decoding="async">
+                  <span class="collection-card-overlay" aria-hidden="true"></span>
+                  <span class="collection-card-body"><span class="collection-card-title">Detalles con <em>chocolate</em></span><span class="collection-card-cta">Ver colección</span></span>
+                </a>
+              </li>
+              <li class="collection-slide">
+                <a class="collection-card collection-card--studio" href="${pageContext.request.contextPath}/productos">
+                  <img src="${pageContext.request.contextPath}/img/regalo-premium.svg" alt="Ancheta de chocolates y productos CAVA" width="1254" height="1254" loading="lazy" decoding="async">
+                  <span class="collection-card-overlay" aria-hidden="true"></span>
+                  <span class="collection-card-body"><span class="collection-card-title">Regalos <em>premium</em></span><span class="collection-card-cta">Explorar</span></span>
+                </a>
+              </li>
+              <li class="collection-slide">
+                <a class="collection-card collection-card--studio" href="${pageContext.request.contextPath}/productos">
+                  <img src="${pageContext.request.contextPath}/img/seleccion-para-compartir.svg" alt="Caja de regalo con crema, chocolate y bombones CAVA" width="1254" height="1254" loading="lazy" decoding="async">
+                  <span class="collection-card-overlay" aria-hidden="true"></span>
+                  <span class="collection-card-body"><span class="collection-card-title">Selección para <em>compartir</em></span><span class="collection-card-cta">Ver en la tienda</span></span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <button class="carousel-control carousel-control--prev" type="button" data-carousel-prev aria-label="Ver colección anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="carousel-control carousel-control--next" type="button" data-carousel-next aria-label="Ver colección siguiente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <div class="carousel-indicators" data-carousel-indicators aria-label="Seleccionar posición del carrusel"></div>
+          <p class="sr-only" data-carousel-status aria-live="polite"></p>
         </div>
       </section>
 
       <section class="about-luxury-grid" id="quienes" aria-labelledby="about-title">
         <h2 class="about-manifesto" id="about-title">Creamos experiencias que conectan el origen ancestral del cacao con el diseño contemporáneo.</h2>
         <div class="about-body">
-          <p>En CAVA seleccionamos cacao colombiano de origen fino y ético para convertir cada creación en una experiencia artesanal.</p>
-          <p>Trabajamos con respeto por el ingrediente, el oficio y las personas que hacen posible cada pieza.</p>
-          <a class="cava-button cava-button--secondary-light" href="${pageContext.request.contextPath}/productos">Conocer la colección</a>
+          <p>Nuestra historia está vinculada con Landázuri, Santander, un territorio donde el cacao forma parte de la vida rural y del trabajo de familias que conocen la tierra.</p>
+          <p>Queremos crecer con respeto por el ingrediente, el oficio y las personas que hacen posible cada cosecha.</p>
+          <a class="cava-button cava-button--secondary-light" href="${pageContext.request.contextPath}/origen">Descubrir nuestra historia</a>
         </div>
       </section>
 
@@ -151,10 +185,10 @@
 
   <footer>
     <div class="footer-grid">
-      <div class="footer-col"><div class="footer-brand">CAVA</div><p class="footer-desc">Chocolate artesanal elaborado con cacao colombiano de origen fino y ético.</p></div>
-      <div class="footer-col"><h4>Navegación</h4><ul><li><a href="${pageContext.request.contextPath}/inicio">Inicio</a></li><li><a href="#quienes">Quiénes somos</a></li><li><a href="${pageContext.request.contextPath}/productos">La tienda</a></li></ul></div>
+      <div class="footer-col"><div class="footer-brand">CAVA</div><p class="footer-desc">Chocolate artesanal inspirado en el cacao colombiano y en el cuidado de cada detalle.</p></div>
+      <div class="footer-col"><h4>Navegación</h4><ul><li><a href="${pageContext.request.contextPath}/inicio">Inicio</a></li><li><a href="${pageContext.request.contextPath}/origen">Origen</a></li><li><a href="${pageContext.request.contextPath}/productos">La tienda</a></li></ul></div>
       <div class="footer-col"><h4>Cuenta</h4><ul><li><a href="${pageContext.request.contextPath}/login">Iniciar sesión</a></li><li><a href="${pageContext.request.contextPath}/registro">Crear cuenta</a></li><li><span>Pedidos · Próximamente</span></li></ul></div>
-      <div class="footer-col"><h4>Origen</h4><ul><li><span>Bogotá, Colombia</span></li><li><span>Cacao 100% colombiano</span></li><li><span>Elaboración artesanal</span></li></ul></div>
+      <div class="footer-col"><h4>Origen</h4><ul><li><span>Landázuri, Santander</span></li><li><span>Cacao colombiano</span></li><li><span>Elaboración artesanal</span></li></ul></div>
     </div>
     <div class="footer-bottom"><span>© <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) %> CAVA Alta Chocolatería.</span><span>Hecho con cacao colombiano</span></div>
   </footer>
