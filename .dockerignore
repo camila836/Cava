@@ -1,0 +1,17 @@
+.git
+build/
+dist/
+nbproject/private/
+*.class
+*.log
+.env
+.env.*
+**/.env
+**/.env.*
+lib/mysql-connector-java-8.0.12.jar
+web/WEB-INF/lib/mysql-connector-java-8.0.12.jar
+**/*.sql
+!database/00_create_database.sql
+!database/01_schema.sql
+!database/02_indexes.sql
+!database/03_seed_catalogs.sql
