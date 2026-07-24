@@ -12,7 +12,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && curl --fail --location --silent --show-error \
         --output /tmp/glassfish.zip \
-        "https://github.com/eclipse-ee4j/glassfish/releases/download/${GLASSFISH_VERSION}/glassfish-${GLASSFISH_VERSION}.zip" \
+        "https://download.eclipse.org/ee4j/glassfish/glassfish-${GLASSFISH_VERSION}.zip" \
     && unzip -q /tmp/glassfish.zip -d /opt \
     && rm /tmp/glassfish.zip \
     && curl --fail --location --silent --show-error \
@@ -20,7 +20,7 @@ RUN apt-get update \
         "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/${CONNECTOR_J_VERSION}/mysql-connector-j-${CONNECTOR_J_VERSION}.jar" \
     && curl --fail --location --silent --show-error \
         --output /tmp/netbeans.zip \
-        "https://archive.apache.org/dist/netbeans/netbeans/${NETBEANS_VERSION}/Apache-NetBeans-${NETBEANS_VERSION}-bin.zip" \
+        "https://archive.apache.org/dist/netbeans/netbeans/${NETBEANS_VERSION}/netbeans-${NETBEANS_VERSION}-bin.zip" \
     && unzip -q /tmp/netbeans.zip -d /opt \
     && mv /opt/netbeans /opt/netbeans-${NETBEANS_VERSION} \
     && rm /tmp/netbeans.zip
