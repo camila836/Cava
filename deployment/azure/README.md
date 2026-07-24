@@ -47,6 +47,19 @@ que el esquema esté vacío o tenga exactamente las 15 tablas esperadas; rechaza
 un estado parcial. Después de la inicialización puede mantenerse ese valor: no
 vuelve a ejecutar los scripts cuando detecta las 15 tablas.
 
+## Publicación de imagen de prueba
+
+El workflow `.github/workflows/publish-ghcr.yml` construye desde esta rama y
+publica exclusivamente una etiqueta `sha-<commit>` en
+`ghcr.io/camila836/cava`. Usa el `GITHUB_TOKEN` efímero del workflow, con
+permisos mínimos `contents: read` y `packages: write`; no usa PAT ni registra
+credenciales permanentes. El workflow rechaza sobrescribir una etiqueta SHA
+existente y nunca publica `latest`.
+
+La visibilidad del paquete se comprueba tras la primera publicación. Si GitHub
+lo crea privado, debe hacerse público manualmente antes de cualquier uso en
+Azure; no se añadirán credenciales de GHCR a Azure.
+
 ## Secuencia de Azure aprobada
 
 Solo ejecutar después de confirmar que la suscripción es **Free Trial**, que
@@ -54,9 +67,10 @@ conserva el límite de gasto y que la estimación no supera USD 5 del crédito:
 
 1. Crear `rg-cava-test` en `eastus2` y una alerta de presupuesto de USD 5.
    La alerta avisa; no detiene recursos automáticamente.
-2. Crear exclusivamente el ACR permitido, el entorno y la Container App en
-   Consumption, y MySQL Flexible Server B1ms solo si la oferta Free Trial lo
-   cubre. No crear VM, App Service, AKS, Key Vault, red privada ni dominio.
+2. Usar una imagen pública de GHCR con etiqueta SHA inmutable, el entorno y la
+   Container App en Consumption, y MySQL Flexible Server B1ms solo si la oferta
+   Free Trial lo cubre. No crear ACR, VM, App Service, AKS, Key Vault, red
+   privada ni dominio.
 3. Crear una base vacía mediante este orden, una sola vez:
    `database/00_create_database.sql`, `database/01_schema.sql`,
    `database/02_indexes.sql`, `database/03_seed_catalogs.sql`.

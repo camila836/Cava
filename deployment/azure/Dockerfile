@@ -28,7 +28,13 @@ RUN apt-get update \
 FROM glassfish AS build
 
 WORKDIR /workspace
-COPY . .
+# Copy only the NetBeans project inputs. Database dumps, local artifacts,
+# environment files and the legacy Connector/J copies never enter the build.
+COPY build.xml ./
+COPY nbproject ./nbproject
+COPY src ./src
+COPY test ./test
+COPY web ./web
 
 # NetBeans supplies the project-specific Ant tasks.  compile-jsps is deliberately
 # not invoked here: NetBeans 20's JspC rejects compilerSourceVM=17 (PWC6309).
