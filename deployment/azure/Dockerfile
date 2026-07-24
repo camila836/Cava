@@ -39,7 +39,7 @@ COPY web ./web
 # NetBeans supplies the project-specific Ant tasks.  compile-jsps is deliberately
 # not invoked here: NetBeans 20's JspC rejects compilerSourceVM=17 (PWC6309).
 # The runtime deployment below is the authoritative JSP validation for Java 17.
-RUN /opt/netbeans-${NETBEANS_VERSION}/netbeans/extide/ant/bin/ant \
+RUN /opt/netbeans-${NETBEANS_VERSION}/extide/ant/bin/ant \
         -Dj2ee.server.home=/opt/glassfish7/glassfish \
         clean compile compile-test dist
 
