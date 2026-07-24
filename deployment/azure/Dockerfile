@@ -8,7 +8,7 @@ ARG CONNECTOR_J_VERSION=9.7.0
 ARG NETBEANS_VERSION=20
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl unzip \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl mysql-client unzip \
     && rm -rf /var/lib/apt/lists/* \
     && curl --fail --location --silent --show-error \
         --output /tmp/glassfish.zip \
@@ -45,6 +45,7 @@ LABEL org.opencontainers.image.title="CAVA test deployment" \
 
 COPY --from=build /workspace/dist/Cava.war /opt/cava/Cava.war
 COPY deployment/azure/entrypoint.sh /opt/cava/entrypoint.sh
+COPY database/00_create_database.sql database/01_schema.sql database/02_indexes.sql database/03_seed_catalogs.sql /opt/cava/sql/
 
 RUN chmod 0555 /opt/cava/entrypoint.sh
 

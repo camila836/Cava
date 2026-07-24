@@ -39,6 +39,25 @@ require_safe_property() {
     esac
 }
 
+require_safe_database_name() {
+    case "${CAVA_DB_NAME}" in
+        *[!A-Za-z0-9_]*|'')
+            echo "CAVA_DB_NAME must contain only letters, digits, or underscores" >&2
+            exit 65
+            ;;
+    esac
+}
+
+mysql_client() {
+    MYSQL_PWD="${CAVA_DB_PASSWORD}" mysql \
+        --protocol=TCP \
+        --host="${CAVA_DB_HOST}" \
+        --port="${CAVA_DB_PORT}" \
+        --user="${CAVA_DB_USER}" \
+        --ssl-mode=VERIFY_IDENTITY \
+        "$@"
+}
+
 for required_secret in CAVA_DB_HOST CAVA_DB_PORT CAVA_DB_NAME CAVA_DB_USER CAVA_DB_PASSWORD; do
     require_value "${required_secret}"
 done
@@ -46,6 +65,7 @@ done
 for jdbc_property in CAVA_DB_HOST CAVA_DB_PORT CAVA_DB_NAME CAVA_DB_USER; do
     require_safe_property "${jdbc_property}"
 done
+require_safe_database_name
 
 case "${CAVA_DB_PORT}" in
     *[!0-9]*|'')
@@ -58,6 +78,26 @@ esac
 if [ "${CAVA_DB_TLS_MODE:-VERIFY_IDENTITY}" != "VERIFY_IDENTITY" ]; then
     echo "CAVA_DB_TLS_MODE must be VERIFY_IDENTITY" >&2
     exit 65
+fi
+
+# The test image may initialize only an empty CAVA database. It executes the
+# four approved scripts in order and refuses partial or divergent structures.
+if [ "${CAVA_DB_INITIALIZE:-false}" = "true" ]; then
+    mysql_client < /opt/cava/sql/00_create_database.sql
+    TABLE_COUNT="$(mysql_client --batch --skip-column-names --execute "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${CAVA_DB_NAME}'")"
+    case "${TABLE_COUNT}" in
+        0)
+            mysql_client --database="${CAVA_DB_NAME}" < /opt/cava/sql/01_schema.sql
+            mysql_client --database="${CAVA_DB_NAME}" < /opt/cava/sql/02_indexes.sql
+            mysql_client --database="${CAVA_DB_NAME}" < /opt/cava/sql/03_seed_catalogs.sql
+            ;;
+        15)
+            ;;
+        *)
+            echo "CAVA database is partial or divergent; refusing initialization" >&2
+            exit 66
+            ;;
+    esac
 fi
 
 "${ASADMIN}" start-domain domain1 >/dev/null

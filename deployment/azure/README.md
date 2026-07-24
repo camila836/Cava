@@ -40,6 +40,13 @@ El arranque crea `CavaPool` y `jdbc/CavaDS`, comprueba el pool y despliega
 del filesystem efímero del contenedor y el archivo temporal se elimina antes
 del despliegue.
 
+Para la primera revisión, `CAVA_DB_INITIALIZE=true` permite crear únicamente
+la base de prueba vacía con `00_create_database.sql`, `01_schema.sql`,
+`02_indexes.sql` y `03_seed_catalogs.sql`, en ese orden. El contenedor verifica
+que el esquema esté vacío o tenga exactamente las 15 tablas esperadas; rechaza
+un estado parcial. Después de la inicialización puede mantenerse ese valor: no
+vuelve a ejecutar los scripts cuando detecta las 15 tablas.
+
 ## Secuencia de Azure aprobada
 
 Solo ejecutar después de confirmar que la suscripción es **Free Trial**, que
