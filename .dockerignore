@@ -1,0 +1,8 @@
+.git
+build/
+dist/
+nbproject/private/
+*.class
+*.log
+deployment/azure/.env
+deployment/azure/.env.*
