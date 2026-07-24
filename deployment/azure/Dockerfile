@@ -41,6 +41,7 @@ COPY web ./web
 # The runtime deployment below is the authoritative JSP validation for Java 17.
 RUN /opt/netbeans-${NETBEANS_VERSION}/extide/ant/bin/ant \
         -Dj2ee.server.home=/opt/glassfish7/glassfish \
+        -Dlibs.CopyLibs.classpath=/opt/netbeans-${NETBEANS_VERSION}/java/ant/extra/org-netbeans-modules-java-j2seproject-copylibstask.jar \
         clean compile compile-test dist
 
 FROM glassfish AS runtime
